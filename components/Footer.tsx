@@ -19,10 +19,10 @@ const Footer: React.FC<{ setView: (view: string, options?: { anchor?: string; st
     return (
         <footer id="kontak" className="bg-bsk-dark-gray text-gray-400 relative">
             <div className="container mx-auto px-6 sm:px-8 py-20 max-w-7xl">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     
                     {/* About & Social */}
-                    <div className="space-y-4 sm:col-span-2 lg:col-span-1">
+                    <div className="space-y-4">
                         {header.logoImage ? (
                             <img src={header.logoImage} alt={header.logoText} className="h-10 w-auto" />
                         ) : (
@@ -30,8 +30,8 @@ const Footer: React.FC<{ setView: (view: string, options?: { anchor?: string; st
                         )}
                         <p className="text-sm leading-relaxed">{footer.about}</p>
                         <div className="flex space-x-4 pt-2">
-                            <a href="#" aria-label="Instagram" className="text-gray-400 hover:text-white transition-colors"><InstagramIcon className="w-6 h-6" /></a>
-                            <a href="#" aria-label="LinkedIn" className="text-gray-400 hover:text-white transition-colors"><LinkedinIcon className="w-6 h-6" /></a>
+                            <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-400 hover:text-white transition-colors"><InstagramIcon className="w-6 h-6" /></a>
+                            <a href="https://www.linkedin.com/company/103727497/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-gray-400 hover:text-white transition-colors"><LinkedinIcon className="w-6 h-6" /></a>
                         </div>
                     </div>
 

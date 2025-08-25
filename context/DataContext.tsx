@@ -1,6 +1,5 @@
 
-
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 // Define the structure of our data for a single language
 interface NavLink {
@@ -245,6 +244,13 @@ interface FAQData {
     items: FAQItem[];
 }
 
+interface LoginPageData {
+    backgroundImage: string;
+    title: string;
+    subtitle: string;
+    buttonText: string;
+}
+
 interface AppData {
     header: {
         logoText: string;
@@ -291,7 +297,10 @@ interface AppData {
     allServicesPage: AllServicesPageData;
     designServicePage: DesignServicePageData;
     costSimulatorPage: CostSimulatorPageData;
+    loginPage: LoginPageData;
 }
+
+const LOCAL_STORAGE_KEY = 'bsk-admin-data';
 
 // Initial default data
 const initialData: AppData = {
@@ -1099,6 +1108,12 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
                 ]
             }
         ]
+    },
+    loginPage: {
+        backgroundImage: 'https://images.unsplash.com/photo-1522075782449-e8782522075b?q=80&w=2070&auto=format&fit=crop',
+        title: 'Selamat Datang Kembali',
+        subtitle: 'Silakan masuk untuk mengakses akun Anda.',
+        buttonText: 'Masuk'
     }
 };
 
@@ -1114,7 +1129,33 @@ const DataContext = createContext<DataContextValue | undefined>(undefined);
 
 // Create the provider component
 export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState<AppData>(() => {
+    try {
+        const storedData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (storedData) {
+            return JSON.parse(storedData);
+        }
+    } catch (error) {
+        console.error("Failed to parse data from localStorage", error);
+    }
+    return initialData;
+  });
+
+  useEffect(() => {
+    try {
+        window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+    } catch (error) {
+        if (error instanceof DOMException && (
+            error.name === 'QuotaExceededError' ||
+            error.name === 'NS_ERROR_DOM_QUOTA_REACHED' // Firefox
+        )) {
+            alert('Error: Could not save changes. The application storage is full. Please reduce the size of images or remove some content.');
+        } else {
+            console.error("Failed to save data to localStorage", error);
+        }
+    }
+  }, [data]);
+
 
   return (
     <DataContext.Provider value={{ data, setData }}>

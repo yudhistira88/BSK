@@ -7,6 +7,7 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ setView }) => {
     const { data } = useData();
+    const { header, loginPage } = data;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -24,31 +25,25 @@ const Login: React.FC<LoginProps> = ({ setView }) => {
     };
 
     return (
-        <div className="min-h-screen bg-bsk-light-gray flex flex-col justify-center items-center p-4">
-            <div className="w-full max-w-md">
-                <div className="text-center mb-8">
-                    <button onClick={() => setView('site')} className="inline-block">
-                        {data.header.logoImage ? (
-                           <img src={data.header.logoImage} alt={data.header.logoText} className="h-16 w-auto mx-auto" />
-                        ) : (
-                           <span className="text-4xl font-black tracking-wider text-bsk-dark-gray">{data.header.logoText}</span>
-                        )}
-                    </button>
-                </div>
-
-                <div className="bg-white p-8 rounded-2xl shadow-lg">
-                    <h2 className="text-2xl font-bold text-center text-bsk-dark-gray mb-1">Selamat Datang</h2>
-                    <p className="text-center text-bsk-text-gray mb-6">Silakan masuk ke akun Anda.</p>
+        <div 
+            className="min-h-screen bg-cover bg-center flex flex-col justify-center items-center p-4 relative"
+            style={{ backgroundImage: `url('${loginPage.backgroundImage}')` }}
+        >
+            <div className="absolute inset-0 bg-bsk-dark-gray/80 backdrop-blur-sm"></div>
+            <div className="relative w-full max-w-md z-10">
+                <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-2xl shadow-lg text-white">
+                    <h2 className="text-3xl font-bold text-center mb-1">{loginPage.title}</h2>
+                    <p className="text-center text-gray-300 mb-8">{loginPage.subtitle}</p>
                     
                     {error && (
-                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <div className="bg-red-500/30 border border-red-500 text-red-200 px-4 py-3 rounded relative mb-4" role="alert">
                             <span className="block sm:inline">{error}</span>
                         </div>
                     )}
                     
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email/Username</label>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-300">Email/Username</label>
                             <input
                                 id="email"
                                 name="email"
@@ -57,12 +52,13 @@ const Login: React.FC<LoginProps> = ({ setView }) => {
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-bsk-blue focus:border-bsk-blue sm:text-sm"
+                                className="mt-1 block w-full px-4 py-3 bg-white/10 border-2 border-transparent focus:border-bsk-yellow rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0 sm:text-sm transition-all"
+                                placeholder="Masukkan username Anda"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="password"  className="block text-sm font-medium text-gray-700">Kata Sandi</label>
+                            <label htmlFor="password"  className="block text-sm font-medium text-gray-300">Kata Sandi</label>
                             <input
                                 id="password"
                                 name="password"
@@ -71,32 +67,33 @@ const Login: React.FC<LoginProps> = ({ setView }) => {
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-bsk-blue focus:border-bsk-blue sm:text-sm"
+                                className="mt-1 block w-full px-4 py-3 bg-white/10 border-2 border-transparent focus:border-bsk-yellow rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0 sm:text-sm transition-all"
+                                placeholder="********"
                             />
                         </div>
 
                         <div>
                             <button
                                 type="submit"
-                                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-bsk-dark-gray bg-bsk-yellow hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bsk-yellow transition-all"
+                                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-bsk-dark-gray bg-bsk-yellow hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-bsk-yellow transition-all tracking-wider transform hover:scale-105"
                             >
-                                Masuk
+                                {loginPage.buttonText}
                             </button>
                         </div>
                     </form>
 
-                    <div className="mt-6 text-center text-sm">
-                        <p className="text-gray-600">
+                    <div className="mt-8 text-center text-sm">
+                        <p className="text-gray-300">
                             Belum punya akun?{' '}
-                            <button onClick={() => setView('register')} className="font-medium text-bsk-blue hover:text-bsk-blue/80">
+                            <button onClick={() => setView('register')} className="font-bold text-bsk-yellow hover:text-white">
                                 Daftar sekarang
                             </button>
                         </p>
                     </div>
                 </div>
                 
-                <div className="mt-6 text-center">
-                    <button onClick={() => setView('site')} className="font-medium text-bsk-blue hover:text-bsk-blue/80 transition-colors">
+                <div className="mt-8 text-center">
+                    <button onClick={() => setView('site')} className="font-medium text-white hover:text-gray-200 transition-colors bg-black/20 px-4 py-2 rounded-full">
                         &larr; Kembali ke Situs
                     </button>
                 </div>

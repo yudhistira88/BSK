@@ -47,29 +47,23 @@ const Register: React.FC<RegisterProps> = ({ setView }) => {
     };
 
     return (
-        <div className="min-h-screen bg-bsk-light-gray flex flex-col justify-center items-center p-4">
-            <div className="w-full max-w-md">
-                <div className="text-center mb-8">
-                    <button onClick={() => setView('site')} className="inline-block">
-                        {data.header.logoImage ? (
-                           <img src={data.header.logoImage} alt={data.header.logoText} className="h-16 w-auto mx-auto" />
-                        ) : (
-                           <span className="text-4xl font-black tracking-wider text-bsk-dark-gray">{data.header.logoText}</span>
-                        )}
-                    </button>
-                </div>
-
-                <div className="bg-white p-8 rounded-2xl shadow-lg">
-                    <h2 className="text-2xl font-bold text-center text-bsk-dark-gray mb-1">Pendaftaran Mitra BSK</h2>
-                    <p className="text-center text-bsk-text-gray mb-6">Buat akun baru Anda.</p>
+        <div 
+            className="min-h-screen bg-cover bg-center flex flex-col justify-center items-center p-4 relative"
+            style={{ backgroundImage: `url('${data.loginPage.backgroundImage}')` }}
+        >
+            <div className="absolute inset-0 bg-bsk-dark-gray/80 backdrop-blur-sm"></div>
+            <div className="relative w-full max-w-md z-10">
+                <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-2xl shadow-lg text-white">
+                    <h2 className="text-3xl font-bold text-center mb-1">Pendaftaran Mitra BSK</h2>
+                    <p className="text-center text-gray-300 mb-6">Buat akun baru Anda.</p>
                     
                     {error && (
-                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <div className="bg-red-500/30 border border-red-500 text-red-200 px-4 py-3 rounded relative mb-4" role="alert">
                             <span>{error}</span>
                         </div>
                     )}
                     {success && (
-                        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <div className="bg-green-500/30 border border-green-500 text-green-200 px-4 py-3 rounded relative mb-4" role="alert">
                            <span>{success}</span>
                         </div>
                     )}
@@ -81,11 +75,11 @@ const Register: React.FC<RegisterProps> = ({ setView }) => {
                         <InputField name="company" label="Nama Perusahaan (Opsional)" value={formData.company} onChange={handleChange} />
 
                         <div>
-                             <label htmlFor="type" className="block text-sm font-medium text-gray-700">Jenis Pendaftaran</label>
-                             <select id="type" name="type" value={formData.type} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-bsk-blue focus:border-bsk-blue sm:text-sm">
-                                <option>Customer</option>
-                                <option>Mitra</option>
-                                <option>Distributor</option>
+                             <label htmlFor="type" className="block text-sm font-medium text-gray-300">Jenis Pendaftaran</label>
+                             <select id="type" name="type" value={formData.type} onChange={handleChange} className="mt-1 block w-full px-4 py-3 bg-white/10 text-white border-2 border-transparent focus:border-bsk-yellow rounded-md shadow-sm focus:outline-none focus:ring-0 sm:text-sm transition-all appearance-none">
+                                <option className="bg-bsk-dark-gray">Customer</option>
+                                <option className="bg-bsk-dark-gray">Mitra</option>
+                                <option className="bg-bsk-dark-gray">Distributor</option>
                             </select>
                         </div>
                         
@@ -95,7 +89,7 @@ const Register: React.FC<RegisterProps> = ({ setView }) => {
                         <div>
                             <button
                                 type="submit"
-                                className="w-full flex justify-center py-3 px-4 mt-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-bsk-dark-gray bg-bsk-yellow hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bsk-yellow transition-all"
+                                className="w-full flex justify-center py-3 px-4 mt-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-bsk-dark-gray bg-bsk-yellow hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-bsk-yellow transition-all tracking-wider transform hover:scale-105"
                                 disabled={!!success}
                             >
                                 Daftar
@@ -103,17 +97,17 @@ const Register: React.FC<RegisterProps> = ({ setView }) => {
                         </div>
                     </form>
 
-                     <div className="mt-6 text-center text-sm">
-                        <p className="text-gray-600">
+                     <div className="mt-8 text-center text-sm">
+                        <p className="text-gray-300">
                             Sudah punya akun?{' '}
-                            <button onClick={() => setView('login')} className="font-medium text-bsk-blue hover:text-bsk-blue/80">
+                            <button onClick={() => setView('login')} className="font-bold text-bsk-yellow hover:text-white">
                                 Masuk di sini
                             </button>
                         </p>
                     </div>
                 </div>
-                 <div className="mt-6 text-center">
-                    <button onClick={() => setView('site')} className="font-medium text-bsk-blue hover:text-bsk-blue/80 transition-colors">
+                 <div className="mt-8 text-center">
+                    <button onClick={() => setView('site')} className="font-medium text-white hover:text-gray-200 transition-colors bg-black/20 px-4 py-2 rounded-full">
                         &larr; Kembali ke Situs
                     </button>
                 </div>
@@ -125,7 +119,7 @@ const Register: React.FC<RegisterProps> = ({ setView }) => {
 
 const InputField: React.FC<{ name: string, label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, type?: string, required?: boolean }> = ({ name, label, value, onChange, type = 'text', required = false }) => (
     <div>
-        <label htmlFor={name} className="block text-sm font-medium text-gray-700">{label}</label>
+        <label htmlFor={name} className="block text-sm font-medium text-gray-300">{label}</label>
         <input
             id={name}
             name={name}
@@ -133,7 +127,7 @@ const InputField: React.FC<{ name: string, label: string, value: string, onChang
             required={required}
             value={value}
             onChange={onChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-bsk-blue focus:border-bsk-blue sm:text-sm"
+            className="mt-1 block w-full px-4 py-3 bg-white/10 border-2 border-transparent focus:border-bsk-yellow rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0 sm:text-sm transition-all text-white"
         />
     </div>
 );

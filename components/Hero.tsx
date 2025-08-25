@@ -96,13 +96,13 @@ const Hero: React.FC<{ setView: (view: string, options?: { anchor?: string; stat
       {/* Content */}
       <div className="relative h-full flex flex-col justify-center">
         <div className="container mx-auto px-6 sm:px-8 max-w-7xl">
-            <div className="max-w-2xl bg-bsk-dark-gray/60 p-8">
-                 <h1 className="text-4xl md:text-6xl font-black tracking-wider leading-tight animate__animated animate__fadeInLeft">
+            <div className="max-w-2xl bg-bsk-dark-gray/60 p-4 md:p-8">
+                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-wider leading-tight animate__animated animate__fadeInLeft">
                     {hero.slides[currentSlide].title.map((line, i) => (
                         <span key={i} className="block">{line}</span>
                     ))}
                  </h1>
-                 <p className="mt-4 text-white/90 animate__animated animate__fadeInLeft animate__delay-1s">
+                 <p className="mt-4 text-sm md:text-base text-white/90 animate__animated animate__fadeInLeft animate__delay-1s">
                     {hero.slides[currentSlide].subtitle}
                  </p>
                  {currentSlide === 0 ? (

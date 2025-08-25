@@ -1,9 +1,7 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext';
 import { 
-    CogIcon, PhotographIcon, ChartBarIcon, UsersIcon, IdentificationIcon, RssIcon, MailIcon, OfficeBuildingIcon, BudgetIcon, CheckCircleIcon, ArchitectIcon, DownloadIcon, QuestionMarkCircleIcon
+    CogIcon, PhotographIcon, ChartBarIcon, UsersIcon, IdentificationIcon, RssIcon, MailIcon, OfficeBuildingIcon, BudgetIcon, CheckCircleIcon, ArchitectIcon, DownloadIcon, QuestionMarkCircleIcon, KeyIcon
 } from './icons';
 
 const SelectField: React.FC<{ label: string; value: string; options: string[]; onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void; }> = ({ label, value, options, onChange }) => (
@@ -36,18 +34,6 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
         });
     };
     
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, path: string) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64String = reader.result as string;
-                handlePathChange(path, base64String);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-    
     const handleAddItem = (updateFn: (data: any) => any) => {
         setLocalData(prevData => {
             let newData = JSON.parse(JSON.stringify(prevData));
@@ -77,6 +63,7 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
 
     const sections = {
         header: { name: 'Header & Nav', icon: <CogIcon className="w-5 h-5"/> },
+        loginPage: { name: 'Halaman Login', icon: <KeyIcon className="w-5 h-5"/> },
         hero: { name: 'Hero Section', icon: <PhotographIcon className="w-5 h-5"/> },
         stats: { name: 'Stats Section', icon: <ChartBarIcon className="w-5 h-5"/> },
         aboutUs: { name: 'Tentang Kami', icon: <IdentificationIcon className="w-5 h-5"/> },
@@ -99,7 +86,7 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                         <ImageField 
                             label="Logo Image (PNG or JPG)" 
                             src={localData.header.logoImage} 
-                            onChange={e => handleImageChange(e, 'header.logoImage')} 
+                            onUpdate={value => handlePathChange('header.logoImage', value)} 
                         />
                         <InputField 
                             label="Logo Text (Fallback)" 
@@ -163,6 +150,31 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                         </div>
                     </Card>
                 );
+            case 'loginPage':
+                return (
+                    <Card title="Pengaturan Halaman Login">
+                        <ImageField 
+                            label="Gambar Latar Belakang" 
+                            src={localData.loginPage.backgroundImage} 
+                            onUpdate={value => handlePathChange('loginPage.backgroundImage', value)} 
+                        />
+                        <InputField 
+                            label="Judul Utama" 
+                            value={localData.loginPage.title} 
+                            onChange={e => handlePathChange('loginPage.title', e.target.value)} 
+                        />
+                        <InputField 
+                            label="Subjudul" 
+                            value={localData.loginPage.subtitle} 
+                            onChange={e => handlePathChange('loginPage.subtitle', e.target.value)} 
+                        />
+                        <InputField 
+                            label="Teks Tombol" 
+                            value={localData.loginPage.buttonText} 
+                            onChange={e => handlePathChange('loginPage.buttonText', e.target.value)} 
+                        />
+                    </Card>
+                );
             case 'hero':
                 return (
                     <Card title="Hero Section Slides">
@@ -179,7 +191,7 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                             getItemTitle={(item, index) => `Slide ${index + 1}`}
                             renderItemContent={(slide, index) => (
                                 <>
-                                    <ImageField label="Background Image" src={slide.backgroundImage} onChange={e => handleImageChange(e, `hero.slides.${index}.backgroundImage`)} />
+                                    <ImageField label="Background Image" src={slide.backgroundImage} onUpdate={value => handlePathChange(`hero.slides.${index}.backgroundImage`, value)} />
                                     <TextAreaField label="Title (one line per entry)" value={slide.title.join('\n')} onChange={e => handlePathChange(`hero.slides.${index}.title`, e.target.value.split('\n'))} />
                                     <TextAreaField label="Subtitle" value={slide.subtitle} onChange={e => handlePathChange(`hero.slides.${index}.subtitle`, e.target.value)} />
                                     <InputField label="Button Text" value={slide.buttonText} onChange={e => handlePathChange(`hero.slides.${index}.buttonText`, e.target.value)} />
@@ -214,8 +226,8 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                         <Card title="Tentang Kami: Bagian Visi">
                             <InputField label="Judul Visi (e.g., VISI)" value={localData.aboutUs.visionTitle} onChange={e => handlePathChange('aboutUs.visionTitle', e.target.value)} />
                             <TextAreaField label="Paragraf Visi" value={localData.aboutUs.visionParagraph} onChange={e => handlePathChange('aboutUs.visionParagraph', e.target.value)} />
-                            <ImageField label="Vision Image 1" src={localData.aboutUs.visionImage1} onChange={e => handleImageChange(e, 'aboutUs.visionImage1')} />
-                            <ImageField label="Vision Image 2" src={localData.aboutUs.visionImage2} onChange={e => handleImageChange(e, 'aboutUs.visionImage2')} />
+                            <ImageField label="Vision Image 1" src={localData.aboutUs.visionImage1} onUpdate={value => handlePathChange('aboutUs.visionImage1', value)} />
+                            <ImageField label="Vision Image 2" src={localData.aboutUs.visionImage2} onUpdate={value => handlePathChange('aboutUs.visionImage2', value)} />
                         </Card>
             
                         <Card title="Tentang Kami: Bagian Misi">
@@ -262,7 +274,7 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                                         <InputField label="Tab Label" value={tab.label} onChange={e => handlePathChange(`whoWeAre.tabs.${tabIndex}.label`, e.target.value)} />
                                         <InputField label="Content Title" value={tab.title} onChange={e => handlePathChange(`whoWeAre.tabs.${tabIndex}.title`, e.target.value)} />
                                         <TextAreaField label="Content Description" value={tab.description} onChange={e => handlePathChange(`whoWeAre.tabs.${tabIndex}.description`, e.target.value)} />
-                                        <ImageField label="Image" src={tab.image} onChange={e => handleImageChange(e, `whoWeAre.tabs.${tabIndex}.image`)} />
+                                        <ImageField label="Image" src={tab.image} onUpdate={value => handlePathChange(`whoWeAre.tabs.${tabIndex}.image`, value)} />
 
                                         <div className="mt-4 pl-4 border-l-2 border-slate-300">
                                             <h4 className="font-semibold text-sm mb-2">Accordion Items</h4>
@@ -297,7 +309,7 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                                 <SubCard key={index} title={`Feature: ${feature.title}`} onRemove={() => handleRemoveItem(d => { d.whyUs.features.splice(index, 1); return d; })}>
                                     <InputField label="Title" value={feature.title} onChange={e => handlePathChange(`whyUs.features.${index}.title`, e.target.value)} />
                                     <TextAreaField label="Description" value={feature.description} onChange={e => handlePathChange(`whyUs.features.${index}.description`, e.target.value)} />
-                                    <ImageField label="Image" src={feature.image} onChange={e => handleImageChange(e, `whyUs.features.${index}.image`)} />
+                                    <ImageField label="Image" src={feature.image} onUpdate={value => handlePathChange(`whyUs.features.${index}.image`, value)} />
                                 </SubCard>
                             ))}
                             <button onClick={() => handleAddItem(d => { 
@@ -316,7 +328,7 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                                 {localData.whyUs.businessTypes.map((biz, index) => (
                                      <SubCard key={index} title={`Business: ${biz.label}`} onRemove={() => handleRemoveItem(d => { d.whyUs.businessTypes.splice(index, 1); return d; })}>
                                         <InputField label="Label" value={biz.label} onChange={e => handlePathChange(`whyUs.businessTypes.${index}.label`, e.target.value)} />
-                                        <ImageField label="Icon" src={biz.icon} onChange={e => handleImageChange(e, `whyUs.businessTypes.${index}.icon`)} />
+                                        <ImageField label="Icon" src={biz.icon} onUpdate={value => handlePathChange(`whyUs.businessTypes.${index}.icon`, value)} />
                                      </SubCard>
                                 ))}
                                 <button onClick={() => handleAddItem(d => { 
@@ -347,7 +359,7 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                                 <>
                                     <InputField label="Title" value={slide.title} onChange={e => handlePathChange(`ctaSlider.${index}.title`, e.target.value)} />
                                     <TextAreaField label="Paragraph" value={slide.paragraph} onChange={e => handlePathChange(`ctaSlider.${index}.paragraph`, e.target.value)} />
-                                    <ImageField label="Image" src={slide.image} onChange={e => handleImageChange(e, `ctaSlider.${index}.image`)} />
+                                    <ImageField label="Image" src={slide.image} onUpdate={value => handlePathChange(`ctaSlider.${index}.image`, value)} />
                                     <InputField label="Button Text" value={slide.buttonText} onChange={e => handlePathChange(`ctaSlider.${index}.buttonText`, e.target.value)} />
                                     <SelectField label="Type" value={slide.type} options={['download', 'partner']} onChange={e => handlePathChange(`ctaSlider.${index}.type`, e.target.value)} />
                                     {slide.type === 'download' &&
@@ -403,7 +415,7 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                                 getItemTitle={(item) => item.title.substring(0, 20) + (item.title.length > 20 ? '...' : '')}
                                 renderItemContent={(post, index) => (
                                     <>
-                                        <ImageField label="Image" src={post.image} onChange={e => handleImageChange(e, `tipsAndNews.posts.${index}.image`)} />
+                                        <ImageField label="Image" src={post.image} onUpdate={value => handlePathChange(`tipsAndNews.posts.${index}.image`, value)} />
                                         <InputField label="Title" value={post.title} onChange={e => handlePathChange(`tipsAndNews.posts.${index}.title`, e.target.value)} />
                                         <InputField label="Date" value={post.date} onChange={e => handlePathChange(`tipsAndNews.posts.${index}.date`, e.target.value)} />
                                         <InputField type="number" label="Comments Count" value={post.comments} onChange={e => handlePathChange(`tipsAndNews.posts.${index}.comments`, parseInt(e.target.value) || 0)} />
@@ -426,7 +438,7 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                             <h3 className="text-lg font-semibold mb-4">Client Logos</h3>
                             {localData.clients.logos.map((logo, index) => (
                                 <SubCard key={index} title={`Logo ${index + 1}`} onRemove={() => handleRemoveItem(d => { d.clients.logos.splice(index, 1); return d; })}>
-                                    <ImageField label="Logo Image" src={logo.src} onChange={e => handleImageChange(e, `clients.logos.${index}.src`)} />
+                                    <ImageField label="Logo Image" src={logo.src} onUpdate={value => handlePathChange(`clients.logos.${index}.src`, value)} />
                                     <InputField label="Alt Text" value={logo.alt} onChange={e => handlePathChange(`clients.logos.${index}.alt`, e.target.value)} />
                                 </SubCard>
                             ))}
@@ -501,13 +513,13 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                     <div className="space-y-6">
                         <Card title="Design Service Page: Hero">
                             <InputField label="Title" value={localData.designServicePage.hero.title} onChange={e => handlePathChange('designServicePage.hero.title', e.target.value)} />
-                            <ImageField label="Background Image" src={localData.designServicePage.hero.backgroundImage} onChange={e => handleImageChange(e, 'designServicePage.hero.backgroundImage')} />
+                            <ImageField label="Background Image" src={localData.designServicePage.hero.backgroundImage} onUpdate={value => handlePathChange('designServicePage.hero.backgroundImage', value)} />
                         </Card>
                         <Card title="Design Service Page: About">
                             <InputField label="Title" value={localData.designServicePage.about.title} onChange={e => handlePathChange('designServicePage.about.title', e.target.value)} />
                             <TextAreaField label="Paragraph 1" value={localData.designServicePage.about.paragraph1} onChange={e => handlePathChange('designServicePage.about.paragraph1', e.target.value)} />
                             <TextAreaField label="Paragraph 2" value={localData.designServicePage.about.paragraph2} onChange={e => handlePathChange('designServicePage.about.paragraph2', e.target.value)} />
-                            <ImageField label="Image" src={localData.designServicePage.about.image} onChange={e => handleImageChange(e, 'designServicePage.about.image')} />
+                            <ImageField label="Image" src={localData.designServicePage.about.image} onUpdate={value => handlePathChange('designServicePage.about.image', value)} />
                         </Card>
                         <Card title="Design Service Page: Offerings">
                             <InputField label="Title" value={localData.designServicePage.offerings.title} onChange={e => handlePathChange('designServicePage.offerings.title', e.target.value)} />
@@ -554,7 +566,7 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                         <Card title="Cost Simulator Page: Hero">
                             <InputField label="Title" value={localData.costSimulatorPage.hero.title} onChange={e => handlePathChange('costSimulatorPage.hero.title', e.target.value)} />
                             <InputField label="Subtitle" value={localData.costSimulatorPage.hero.subtitle} onChange={e => handlePathChange('costSimulatorPage.hero.subtitle', e.target.value)} />
-                            <ImageField label="Background Image" src={localData.costSimulatorPage.hero.backgroundImage} onChange={e => handleImageChange(e, 'costSimulatorPage.hero.backgroundImage')} />
+                            <ImageField label="Background Image" src={localData.costSimulatorPage.hero.backgroundImage} onUpdate={value => handlePathChange('costSimulatorPage.hero.backgroundImage', value)} />
                         </Card>
                          <Card title="Cost Simulator Page: Intro">
                             <InputField label="Title" value={localData.costSimulatorPage.intro.title} onChange={e => handlePathChange('costSimulatorPage.intro.title', e.target.value)} />
@@ -607,7 +619,7 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                                                 
                                                 <div className="mt-4 pl-4 border-l-2 border-slate-300">
                                                     <h6 className="font-semibold text-xs mb-2">Input Fields for this Sub-Service</h6>
-                                                    {sub.fields.map((field, fieldIndex) => (
+                                                    {sub.fields?.map((field, fieldIndex) => (
                                                         <div key={field.id} className="bg-slate-200 p-2 rounded-md mb-2">
                                                              <div className="flex justify-between items-center">
                                                                 <h6 className="font-medium text-slate-600 text-xs">{field.label}</h6>
@@ -620,7 +632,14 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                                                             {field.type === 'select' && <StringArrayEditor label="Options" array={field.options || []} onUpdate={newArray => handlePathChange(`costSimulatorPage.calculatorSteps.${stepIndex}.subServices.${subIndex}.fields.${fieldIndex}.options`, newArray)} />}
                                                         </div>
                                                     ))}
-                                                    <button onClick={() => handleAddItem(d => { d.costSimulatorPage.calculatorSteps[stepIndex].subServices[subIndex].fields.push({ id: `new-field-${Date.now()}`, label: 'New Field', type: 'numeric' }); return d; })} className="text-xs bg-green-100 text-green-800 font-semibold py-1 px-2 rounded-lg hover:bg-green-200 transition">Add Field</button>
+                                                    <button onClick={() => handleAddItem(d => { 
+                                                        const subService = d.costSimulatorPage.calculatorSteps[stepIndex].subServices[subIndex];
+                                                        if (!subService.fields) {
+                                                            subService.fields = [];
+                                                        }
+                                                        subService.fields.push({ id: `new-field-${Date.now()}`, label: 'New Field', type: 'numeric' }); 
+                                                        return d; 
+                                                    })} className="text-xs bg-green-100 text-green-800 font-semibold py-1 px-2 rounded-lg hover:bg-green-200 transition">Add Field</button>
                                                 </div>
                                             </div>
                                         ))}
@@ -858,15 +877,153 @@ const StringArrayEditor: React.FC<{ label: string; array: string[]; onUpdate: (n
     );
 };
 
-const ImageField: React.FC<{ label: string; src: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; }> = ({ label, src, onChange }) => (
-    <div className="mb-4">
-        <label className="block text-sm font-medium text-slate-700 mb-1.5">{label}</label>
-        <div className="mt-2 p-4 border border-dashed border-slate-300 rounded-lg">
-            {src && <img src={src} alt={label} className="w-40 h-auto object-cover rounded-md mb-4 border border-slate-200" />}
-            <input type="file" accept="image/jpeg, image/png, image/webp, image/svg+xml" onChange={onChange} className="text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-bsk-blue hover:file:bg-blue-100 transition cursor-pointer w-full" />
+const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: string) => void; }> = ({ label, src, onUpdate }) => {
+    const [uploadType, setUploadType] = useState<'file' | 'link'>('file');
+    const [inputValue, setInputValue] = useState('');
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [message, setMessage] = useState('');
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+    // Sync component state with src prop on load and on change
+    useEffect(() => {
+        const isUrl = src && (src.startsWith('http://') || src.startsWith('https://'));
+        setUploadType(isUrl ? 'link' : 'file');
+        setInputValue(isUrl ? src : '');
+    }, [src]);
+
+    // Reset status message after a while
+    useEffect(() => {
+        if (status === 'success' || status === 'error') {
+            const timer = setTimeout(() => {
+                setStatus('idle');
+                setMessage('');
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [status]);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validation
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+        if (!allowedTypes.includes(file.type)) {
+            setStatus('error');
+            setMessage('Invalid file type. Please use PNG, JPG, WEBP, or SVG.');
+            return;
+        }
+        const maxSizeInMB = 3;
+        if (file.size > maxSizeInMB * 1024 * 1024) {
+            setStatus('error');
+            setMessage(`File is too large. Max size is ${maxSizeInMB}MB.`);
+            return;
+        }
+
+        setStatus('loading');
+        setMessage('Uploading...');
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64String = reader.result as string;
+            onUpdate(base64String);
+            setStatus('success');
+            setMessage('Upload successful!');
+        };
+        reader.onerror = () => {
+            setStatus('error');
+            setMessage('Failed to read the file.');
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleLinkVerification = () => {
+        if (!inputValue.trim() || !inputValue.startsWith('http')) {
+            setStatus('error');
+            setMessage('Please enter a valid URL (starting with http/https).');
+            return;
+        }
+
+        setStatus('loading');
+        setMessage('Verifying image link...');
+
+        const img = new Image();
+        img.onload = () => {
+            onUpdate(inputValue);
+            setStatus('success');
+            setMessage('Link is valid and updated!');
+        };
+        img.onerror = () => {
+            setStatus('error');
+            setMessage('Could not load image from the URL.');
+        };
+        img.src = inputValue;
+    };
+
+    const statusIndicator = {
+        loading: <div className="flex items-center gap-2 text-sm text-blue-600"><svg className="animate-spin h-4 w-4 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>{message}</span></div>,
+        success: <div className="flex items-center gap-2 text-sm text-green-600 font-semibold"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg><span>{message}</span></div>,
+        error: <div className="flex items-center gap-2 text-sm text-red-600 font-semibold"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" /></svg><span>{message}</span></div>,
+        idle: null,
+    };
+
+    return (
+        <div className="mb-4">
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">{label}</label>
+            <div className="bg-slate-100 rounded-lg p-1 flex w-fit mb-2">
+                 <button 
+                    onClick={() => setUploadType('file')} 
+                    className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${uploadType === 'file' ? 'bg-white text-bsk-blue shadow-sm' : 'text-slate-600 hover:bg-slate-200'}`}
+                >
+                    Upload File
+                </button>
+                 <button 
+                    onClick={() => setUploadType('link')} 
+                    className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${uploadType === 'link' ? 'bg-white text-bsk-blue shadow-sm' : 'text-slate-600 hover:bg-slate-200'}`}
+                >
+                    Use Link
+                </button>
+            </div>
+            <div className="mt-2 p-4 border border-dashed border-slate-300 rounded-lg">
+                {src ? (
+                    <img src={src} alt="Current" className="w-40 h-auto object-cover rounded-md mb-4 border border-slate-200" />
+                ) : (
+                    <div className="w-40 h-24 bg-slate-100 rounded-md mb-4 flex items-center justify-center text-slate-400 text-sm">No Image</div>
+                )}
+                
+                {uploadType === 'file' && (
+                    <input 
+                        ref={fileInputRef}
+                        type="file" 
+                        accept="image/jpeg, image/png, image/webp, image/svg+xml" 
+                        onChange={handleFileChange} 
+                        className="text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-bsk-blue hover:file:bg-blue-100 transition cursor-pointer w-full" 
+                    />
+                )}
+                
+                {uploadType === 'link' && (
+                    <div className="flex items-center gap-2">
+                        <input 
+                            type="text" 
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            placeholder="https://example.com/image.png" 
+                            className="flex-grow w-full px-4 py-2 bg-white border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-bsk-blue/50 focus:border-bsk-blue transition" 
+                        />
+                        <button 
+                            onClick={handleLinkVerification}
+                            className="flex-shrink-0 bg-bsk-blue text-white font-semibold py-2 px-4 rounded-lg hover:bg-opacity-90 transition"
+                        >
+                            Verify
+                        </button>
+                    </div>
+                )}
+                 <div className="mt-3 h-5">
+                    {statusIndicator[status]}
+                </div>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 const RemoveButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
     <button onClick={onClick} className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-50" aria-label="Remove item">
