@@ -897,6 +897,17 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
             return () => clearTimeout(timer);
         }
     }, [status]);
+    
+    const applyCacheBuster = (url: string) => {
+        try {
+            const newUrl = new URL(url);
+            newUrl.searchParams.set('t', Date.now().toString());
+            return newUrl.toString();
+        } catch (e) {
+            // Handle cases where the URL might be invalid initially
+            return `${url}?t=${Date.now().toString()}`;
+        }
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -933,7 +944,7 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
         .then(response => response.json())
         .then(result => {
             if (result.success) {
-                onUpdate(result.data.url);
+                onUpdate(applyCacheBuster(result.data.url));
                 setStatus('success');
                 setMessage('Image hosted successfully!');
             } else {
@@ -959,7 +970,7 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
 
         const img = new Image();
         img.onload = () => {
-            onUpdate(inputValue);
+            onUpdate(applyCacheBuster(inputValue));
             setStatus('success');
             setMessage('Link is valid and updated!');
         };
