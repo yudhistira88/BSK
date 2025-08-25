@@ -878,7 +878,7 @@ const StringArrayEditor: React.FC<{ label: string; array: string[]; onUpdate: (n
 };
 
 const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: string) => void; }> = ({ label, src, onUpdate }) => {
-    const [uploadType, setUploadType] = useState<'file' | 'link'>('file');
+    const [uploadType, setUploadType] = useState<'file' | 'link'>('link');
     const [inputValue, setInputValue] = useState('');
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [message, setMessage] = useState('');
@@ -886,9 +886,15 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
 
     // Sync component state with src prop on load and on change
     useEffect(() => {
-        const isUrl = src && (src.startsWith('http://') || src.startsWith('https://'));
-        setUploadType(isUrl ? 'link' : 'file');
-        setInputValue(isUrl ? src : '');
+        if (src) {
+            const isUrl = src.startsWith('http://') || src.startsWith('https://');
+            setUploadType(isUrl ? 'link' : 'file'); // Set tab based on src type
+            setInputValue(isUrl ? src : '');      // Pre-fill URL if it's a link
+        } else {
+            // If there's no src, ensure the default is 'link' and input is clear
+            setUploadType('link');
+            setInputValue('');
+        }
     }, [src]);
 
     // Reset status message after a while
@@ -971,16 +977,16 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
             <label className="block text-sm font-medium text-slate-700 mb-1.5">{label}</label>
             <div className="bg-slate-100 rounded-lg p-1 flex w-fit mb-2">
                  <button 
-                    onClick={() => setUploadType('file')} 
-                    className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${uploadType === 'file' ? 'bg-white text-bsk-blue shadow-sm' : 'text-slate-600 hover:bg-slate-200'}`}
-                >
-                    Upload File
-                </button>
-                 <button 
                     onClick={() => setUploadType('link')} 
                     className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${uploadType === 'link' ? 'bg-white text-bsk-blue shadow-sm' : 'text-slate-600 hover:bg-slate-200'}`}
                 >
-                    Use Link
+                    Gunakan Tautan (Disarankan)
+                </button>
+                 <button 
+                    onClick={() => setUploadType('file')} 
+                    className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${uploadType === 'file' ? 'bg-white text-bsk-blue shadow-sm' : 'text-slate-600 hover:bg-slate-200'}`}
+                >
+                    Unggah File
                 </button>
             </div>
             <div className="mt-2 p-4 border border-dashed border-slate-300 rounded-lg">
@@ -991,13 +997,19 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
                 )}
                 
                 {uploadType === 'file' && (
-                    <input 
-                        ref={fileInputRef}
-                        type="file" 
-                        accept="image/jpeg, image/png, image/webp, image/svg+xml" 
-                        onChange={handleFileChange} 
-                        className="text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-bsk-blue hover:file:bg-blue-100 transition cursor-pointer w-full" 
-                    />
+                    <>
+                        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-4 rounded-r-lg" role="alert">
+                            <p className="font-bold">Peringatan Penting</p>
+                            <p className="text-sm">Gambar yang diunggah di sini hanya akan terlihat di browser Anda saat ini (untuk pratinjau). Untuk memastikan gambar dapat dilihat oleh semua pengunjung, silakan gunakan tab <strong>Gunakan Tautan</strong>.</p>
+                        </div>
+                        <input 
+                            ref={fileInputRef}
+                            type="file" 
+                            accept="image/jpeg, image/png, image/webp, image/svg+xml" 
+                            onChange={handleFileChange} 
+                            className="text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-bsk-blue hover:file:bg-blue-100 transition cursor-pointer w-full" 
+                        />
+                    </>
                 )}
                 
                 {uploadType === 'link' && (
