@@ -306,7 +306,7 @@ const LOCAL_STORAGE_KEY = 'bsk-admin-data';
 const initialData: AppData = {
     header: {
         logoText: 'BSK',
-        logoImage: 'https://i.imgur.com/wYFkO3F.png',
+        logoImage: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1756094098/logo_bsk_white_ccbsbg.png',
         navLinks: [
             { text: 'Beranda', href: '#home' },
             { text: 'Tentang Kami', href: '#about-us' },

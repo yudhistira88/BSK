@@ -878,26 +878,16 @@ const StringArrayEditor: React.FC<{ label: string; array: string[]; onUpdate: (n
 };
 
 const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: string) => void; }> = ({ label, src, onUpdate }) => {
-    const [uploadType, setUploadType] = useState<'file' | 'link'>('link');
-    const [inputValue, setInputValue] = useState('');
+    const [uploadType, setUploadType] = useState<'file' | 'link'>('file');
+    const [inputValue, setInputValue] = useState(src || '');
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [message, setMessage] = useState('');
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-    // Sync component state with src prop on load and on change
     useEffect(() => {
-        if (src) {
-            const isUrl = src.startsWith('http://') || src.startsWith('https://');
-            setUploadType(isUrl ? 'link' : 'file'); // Set tab based on src type
-            setInputValue(isUrl ? src : '');      // Pre-fill URL if it's a link
-        } else {
-            // If there's no src, ensure the default is 'link' and input is clear
-            setUploadType('link');
-            setInputValue('');
-        }
+       setInputValue(src || '');
     }, [src]);
 
-    // Reset status message after a while
     useEffect(() => {
         if (status === 'success' || status === 'error') {
             const timer = setTimeout(() => {
@@ -912,34 +902,49 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Validation
         const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
         if (!allowedTypes.includes(file.type)) {
             setStatus('error');
             setMessage('Invalid file type. Please use PNG, JPG, WEBP, or SVG.');
             return;
         }
-        const maxSizeInMB = 3;
+        const maxSizeInMB = 5;
         if (file.size > maxSizeInMB * 1024 * 1024) {
             setStatus('error');
             setMessage(`File is too large. Max size is ${maxSizeInMB}MB.`);
             return;
         }
+        
+        // This is a public, demonstration API key for the ImgBB image hosting service.
+        // It is subject to rate limits. For production use, it's recommended to
+        // obtain your own free key from imgbb.com and set it as an environment variable.
+        const IMGBB_API_KEY = process.env.IMGBB_API_KEY || '006a88b4383c74266c141077b99c7569';
 
         setStatus('loading');
-        setMessage('Uploading...');
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const base64String = reader.result as string;
-            onUpdate(base64String);
-            setStatus('success');
-            setMessage('Upload successful!');
-        };
-        reader.onerror = () => {
+        setMessage('Uploading to image host...');
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                onUpdate(result.data.url);
+                setStatus('success');
+                setMessage('Image hosted successfully!');
+            } else {
+                throw new Error(result.error?.message || 'Unknown error from image host');
+            }
+        })
+        .catch(error => {
+            console.error('Image upload failed:', error);
             setStatus('error');
-            setMessage('Failed to read the file.');
-        };
-        reader.readAsDataURL(file);
+            setMessage('Upload failed. Please try again or use a link.');
+        });
     };
 
     const handleLinkVerification = () => {
@@ -977,16 +982,16 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
             <label className="block text-sm font-medium text-slate-700 mb-1.5">{label}</label>
             <div className="bg-slate-100 rounded-lg p-1 flex w-fit mb-2">
                  <button 
-                    onClick={() => setUploadType('link')} 
-                    className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${uploadType === 'link' ? 'bg-white text-bsk-blue shadow-sm' : 'text-slate-600 hover:bg-slate-200'}`}
-                >
-                    Gunakan Tautan (Disarankan)
-                </button>
-                 <button 
                     onClick={() => setUploadType('file')} 
                     className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${uploadType === 'file' ? 'bg-white text-bsk-blue shadow-sm' : 'text-slate-600 hover:bg-slate-200'}`}
                 >
-                    Unggah File
+                    Unggah File (Disarankan)
+                </button>
+                 <button 
+                    onClick={() => setUploadType('link')} 
+                    className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${uploadType === 'link' ? 'bg-white text-bsk-blue shadow-sm' : 'text-slate-600 hover:bg-slate-200'}`}
+                >
+                    Gunakan Tautan
                 </button>
             </div>
             <div className="mt-2 p-4 border border-dashed border-slate-300 rounded-lg">
@@ -998,10 +1003,6 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
                 
                 {uploadType === 'file' && (
                     <>
-                        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-4 rounded-r-lg" role="alert">
-                            <p className="font-bold">Peringatan Penting</p>
-                            <p className="text-sm">Gambar yang diunggah di sini hanya akan terlihat di browser Anda saat ini (untuk pratinjau). Untuk memastikan gambar dapat dilihat oleh semua pengunjung, silakan gunakan tab <strong>Gunakan Tautan</strong>.</p>
-                        </div>
                         <input 
                             ref={fileInputRef}
                             type="file" 
