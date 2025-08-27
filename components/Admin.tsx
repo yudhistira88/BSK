@@ -904,7 +904,6 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
             newUrl.searchParams.set('t', Date.now().toString());
             return newUrl.toString();
         } catch (e) {
-            // Handle cases where the URL might be invalid initially
             return `${url}?t=${Date.now().toString()}`;
         }
     };
@@ -916,67 +915,108 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
         const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
         if (!allowedTypes.includes(file.type)) {
             setStatus('error');
-            setMessage('Invalid file type. Please use PNG, JPG, WEBP, or SVG.');
+            setMessage('Tipe file tidak valid. Gunakan PNG, JPG, WEBP, atau SVG.');
             return;
         }
         const maxSizeInMB = 5;
         if (file.size > maxSizeInMB * 1024 * 1024) {
             setStatus('error');
-            setMessage(`File is too large. Max size is ${maxSizeInMB}MB.`);
+            setMessage(`Ukuran file terlalu besar. Ukuran maksimal adalah ${maxSizeInMB}MB.`);
             return;
         }
         
-        // This is a public, demonstration API key for the ImgBB image hosting service.
-        // It is subject to rate limits. For production use, it's recommended to
-        // obtain your own free key from imgbb.com and set it as an environment variable.
-        const IMGBB_API_KEY = process.env.IMGBB_API_KEY || '006a88b4383c74266c141077b99c7569';
-
-        setStatus('loading');
-        setMessage('Uploading to image host...');
-
-        const formData = new FormData();
-        formData.append('image', file);
-
-        fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success) {
-                onUpdate(applyCacheBuster(result.data.url));
-                setStatus('success');
-                setMessage('Image hosted successfully!');
-            } else {
-                throw new Error(result.error?.message || 'Unknown error from image host');
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            const content = event.target?.result;
+            if (typeof content !== 'string') {
+                setStatus('error');
+                setMessage('Gagal membaca file.');
+                return;
             }
-        })
-        .catch(error => {
-            console.error('Image upload failed:', error);
+
+            const base64Content = content.split(',')[1];
+
+            // These environment variables must be configured in the deployment environment.
+            // Example: GITHUB_TOKEN='ghp_...', GITHUB_REPO_OWNER='your-gh-username', GITHUB_REPO_NAME='your-assets-repo'
+            const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+            const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER;
+            const GITHUB_REPO_NAME = process.env.GITHUB_REPO_NAME;
+            const GITHUB_REPO_BRANCH = process.env.GITHUB_REPO_BRANCH || 'main';
+
+            if (!GITHUB_TOKEN || !GITHUB_REPO_OWNER || !GITHUB_REPO_NAME) {
+                setStatus('error');
+                setMessage('Konfigurasi GitHub tidak ditemukan di environment variables.');
+                console.error('Missing required GitHub environment variables: GITHUB_TOKEN, GITHUB_REPO_OWNER, GITHUB_REPO_NAME');
+                return;
+            }
+
+            const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+            const path = `uploads/${fileName}`;
+            const url = `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${path}`;
+
+            setStatus('loading');
+            setMessage('Mengunggah ke repositori GitHub...');
+
+            try {
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: `feat: upload image ${fileName} via admin panel`,
+                        content: base64Content,
+                        branch: GITHUB_REPO_BRANCH,
+                    }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    onUpdate(applyCacheBuster(result.content.download_url));
+                    setStatus('success');
+                    setMessage('Gambar berhasil diunggah ke GitHub!');
+                } else {
+                    throw new Error(result.message || 'Unknown error from GitHub API');
+                }
+            } catch (error: any) {
+                console.error('GitHub upload failed:', error);
+                setStatus('error');
+                setMessage(`Unggah ke GitHub gagal: ${error.message}.`);
+            }
+        };
+
+        reader.onerror = (error) => {
+            console.error('File reading error:', error);
             setStatus('error');
-            setMessage('Upload failed. Please try again or use a link.');
-        });
+            setMessage('Gagal membaca file.');
+        };
+        
+        reader.readAsDataURL(file);
     };
+
 
     const handleLinkVerification = () => {
         if (!inputValue.trim() || !inputValue.startsWith('http')) {
             setStatus('error');
-            setMessage('Please enter a valid URL (starting with http/https).');
+            setMessage('Masukkan URL yang valid (dimulai dengan http/https).');
             return;
         }
 
         setStatus('loading');
-        setMessage('Verifying image link...');
+        setMessage('Memverifikasi tautan gambar...');
 
         const img = new Image();
         img.onload = () => {
             onUpdate(applyCacheBuster(inputValue));
             setStatus('success');
-            setMessage('Link is valid and updated!');
+            setMessage('Tautan valid dan berhasil diperbarui!');
         };
         img.onerror = () => {
             setStatus('error');
-            setMessage('Could not load image from the URL.');
+            setMessage('Tidak dapat memuat gambar dari URL.');
         };
         img.src = inputValue;
     };
@@ -996,13 +1036,13 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
                     onClick={() => setUploadType('file')} 
                     className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${uploadType === 'file' ? 'bg-white text-bsk-blue shadow-sm' : 'text-slate-600 hover:bg-slate-200'}`}
                 >
-                    Unggah File (Disarankan)
+                    Unggah File ke GitHub
                 </button>
                  <button 
                     onClick={() => setUploadType('link')} 
                     className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${uploadType === 'link' ? 'bg-white text-bsk-blue shadow-sm' : 'text-slate-600 hover:bg-slate-200'}`}
                 >
-                    Gunakan Tautan
+                    Gunakan Tautan Eksternal
                 </button>
             </div>
             <div className="mt-2 p-4 border border-dashed border-slate-300 rounded-lg">
