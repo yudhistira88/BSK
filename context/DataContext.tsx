@@ -1117,6 +1117,11 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
     }
 };
 
+const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER;
+const GITHUB_REPO_NAME = process.env.GITHUB_REPO_NAME;
+const GITHUB_REPO_BRANCH = process.env.GITHUB_REPO_BRANCH || 'main';
+const DATA_FILE_PATH = 'data.json';
+const DATA_FILE_URL = `https://raw.githubusercontent.com/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/${GITHUB_REPO_BRANCH}/${DATA_FILE_PATH}`;
 
 // Define the context structure
 interface DataContextValue {
@@ -1129,22 +1134,52 @@ const DataContext = createContext<DataContextValue | undefined>(undefined);
 
 // Create the provider component
 export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [data, setData] = useState<AppData>(() => {
-    try {
-        const storedData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (storedData) {
-            return JSON.parse(storedData);
-        }
-    } catch (error) {
-        console.error("Failed to parse data from localStorage", error);
-    }
-    return initialData;
-  });
+  const [data, setData] = useState<AppData>(initialData);
+  const [loading, setLoading] = useState(true);
 
+  // This effect fetches data from GitHub on initial load
   useEffect(() => {
-    try {
+    const fetchData = async () => {
+      // If GitHub credentials are not set, fall back to localStorage for local development.
+      if (!GITHUB_REPO_OWNER || !GITHUB_REPO_NAME) {
+        console.warn("GitHub repo env vars not set. Falling back to localStorage.");
+        try {
+          const storedData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+          if (storedData) {
+            setData(JSON.parse(storedData));
+          }
+        } catch (error) {
+          console.error("Failed to parse data from localStorage", error);
+        }
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // Use a cache buster to always get the latest version of the data file
+        const response = await fetch(`${DATA_FILE_URL}?t=${Date.now()}`);
+        if (response.ok) {
+          const remoteData = await response.json();
+          setData(remoteData);
+        } else {
+          console.error(`Failed to fetch remote data (status: ${response.status}). Using initial data. The data file might not exist yet.`);
+        }
+      } catch (error) {
+        console.error("Error fetching remote data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // This effect saves data to localStorage only if GitHub credentials are not configured.
+  useEffect(() => {
+    if (!GITHUB_REPO_OWNER || !GITHUB_REPO_NAME) {
+      try {
         window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
-    } catch (error) {
+      } catch (error) {
         if (error instanceof DOMException && (
             error.name === 'QuotaExceededError' ||
             error.name === 'NS_ERROR_DOM_QUOTA_REACHED' // Firefox
@@ -1153,9 +1188,18 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         } else {
             console.error("Failed to save data to localStorage", error);
         }
+      }
     }
   }, [data]);
 
+  if (loading) {
+    return (
+      <div className="fixed inset-0 bg-white flex flex-col items-center justify-center text-center z-[9999]">
+        <img src={initialData.header.logoImage} alt="BSK Logo" className="h-20 w-auto bg-bsk-dark-gray p-4 mb-4" />
+        <p className="text-bsk-text-dark font-semibold">Loading Application...</p>
+      </div>
+    );
+  }
 
   return (
     <DataContext.Provider value={{ data, setData }}>

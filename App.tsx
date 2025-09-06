@@ -1,7 +1,4 @@
 
-
-
-
 import React, { useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -38,6 +35,7 @@ const Site: React.FC<{
         <AboutUs />
         <WhoWeAre setView={setView} activeTabId={initialState?.activeServiceTab} />
         <WhyUs />
+        <Portfolio />
         <DownloadProposal />
         <FAQ />
         <TipsAndNews setSelectedPost={setSelectedPost} />

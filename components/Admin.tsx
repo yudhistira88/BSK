@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext';
 import { 
-    CogIcon, PhotographIcon, ChartBarIcon, UsersIcon, IdentificationIcon, RssIcon, MailIcon, OfficeBuildingIcon, BudgetIcon, CheckCircleIcon, ArchitectIcon, DownloadIcon, QuestionMarkCircleIcon, KeyIcon
+    CogIcon, PhotographIcon, ChartBarIcon, UsersIcon, IdentificationIcon, RssIcon, MailIcon, OfficeBuildingIcon, BudgetIcon, CheckCircleIcon, ArchitectIcon, DownloadIcon, QuestionMarkCircleIcon, KeyIcon, XCircleIcon
 } from './icons';
 
 const SelectField: React.FC<{ label: string; value: string; options: string[]; onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void; }> = ({ label, value, options, onChange }) => (
@@ -19,6 +20,9 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
     const [localData, setLocalData] = useState(() => JSON.parse(JSON.stringify(data)));
     const [activeSection, setActiveSection] = useState('header');
     const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastType, setToastType] = useState<'success' | 'error'>('success');
+    const [isSaving, setIsSaving] = useState(false);
     const [isSidebarOpen, setSidebarOpen] = useState(false);
 
     const handlePathChange = (path: string, value: any) => {
@@ -50,10 +54,82 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
         });
     }
 
-    const handleSave = () => {
-        setData(localData);
+    const showToastNotification = (message: string, type: 'success' | 'error' = 'success') => {
+        setToastMessage(message);
+        setToastType(type);
         setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000);
+        setTimeout(() => setShowToast(false), 4000);
+    };
+
+    const handleSave = async () => {
+        setIsSaving(true);
+        
+        const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+        const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER;
+        const GITHUB_REPO_NAME = process.env.GITHUB_REPO_NAME;
+        const GITHUB_REPO_BRANCH = process.env.GITHUB_REPO_BRANCH || 'main';
+        const DATA_FILE_PATH = 'data.json';
+        const API_URL = `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${DATA_FILE_PATH}`;
+
+        // If GitHub env vars aren't set, save to localStorage and context (local dev mode)
+        if (!GITHUB_TOKEN || !GITHUB_REPO_OWNER || !GITHUB_REPO_NAME) {
+            setData(localData);
+            showToastNotification('Changes saved locally to browser storage!');
+            setIsSaving(false);
+            return;
+        }
+
+        try {
+            // 1. Get the current file SHA from GitHub
+            let currentSha;
+            const getResponse = await fetch(`${API_URL}?t=${Date.now()}`, { // cache bust GET request
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}` },
+            });
+
+            if (getResponse.ok) {
+                const fileData = await getResponse.json();
+                currentSha = fileData.sha;
+            } else if (getResponse.status !== 404) {
+                throw new Error(`Failed to get file SHA: ${getResponse.statusText}`);
+            }
+            // If 404, currentSha is undefined, which is correct for creating a new file.
+
+            // 2. Base64 encode the new content, handling Unicode characters
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify(localData, null, 2))));
+            
+            // 3. Prepare the request body
+            const body = {
+                message: `feat: update website content via admin panel [${new Date().toISOString()}]`,
+                content,
+                branch: GITHUB_REPO_BRANCH,
+                ...(currentSha && { sha: currentSha }),
+            };
+
+            // 4. Send PUT request to update/create the file
+            const putResponse = await fetch(API_URL, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            });
+
+            if (putResponse.ok) {
+                setData(localData); // Update local app state
+                showToastNotification('Changes saved successfully to the global repository!');
+            } else {
+                const errorData = await putResponse.json();
+                throw new Error(errorData.message || 'Failed to save to GitHub.');
+            }
+
+        } catch (error: any) {
+            console.error("Error saving to GitHub:", error);
+            showToastNotification(`Error: ${error.message}`, 'error');
+        } finally {
+            setIsSaving(false);
+        }
     };
     
     const handleSectionClick = (sectionKey: string) => {
@@ -713,8 +789,13 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
                             <button onClick={() => setView('site')} className="font-semibold text-bsk-blue py-2 px-3 sm:px-5 rounded-full hover:bg-blue-50 transition duration-300 text-sm">
                                 View Site
                             </button>
-                            <button onClick={handleSave} className="bg-bsk-yellow text-bsk-text-dark font-bold py-2 px-3 sm:px-5 rounded-full hover:brightness-95 transition duration-300 text-sm">
-                                Save Changes
+                            <button 
+                                onClick={handleSave} 
+                                disabled={isSaving}
+                                className="bg-bsk-yellow text-bsk-text-dark font-bold py-2 px-3 sm:px-5 rounded-full hover:brightness-95 transition duration-300 text-sm disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+                            >
+                                {isSaving && <svg className="animate-spin h-4 w-4 text-bsk-text-dark" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>}
+                                {isSaving ? 'Saving...' : 'Save Changes'}
                             </button>
                         </div>
                     </div>
@@ -727,9 +808,9 @@ const Admin: React.FC<{ setView: (view: string, options?: { anchor?: string; sta
             </div>
             
             {/* Toast Notification */}
-            <div className={`fixed bottom-8 right-8 bg-bsk-dark-green text-white py-3 px-6 rounded-lg shadow-lg transition-all duration-300 flex items-center gap-3 ${showToast ? 'transform translate-y-0 opacity-100' : 'transform translate-y-10 opacity-0 pointer-events-none'}`}>
-                <CheckCircleIcon className="w-6 h-6"/>
-                <span>Changes saved successfully!</span>
+            <div className={`fixed bottom-8 right-8 text-white py-3 px-6 rounded-lg shadow-lg transition-all duration-300 flex items-center gap-3 ${toastType === 'success' ? 'bg-bsk-dark-green' : 'bg-red-600'} ${showToast ? 'transform translate-y-0 opacity-100' : 'transform translate-y-10 opacity-0 pointer-events-none'}`}>
+                {toastType === 'success' ? <CheckCircleIcon className="w-6 h-6"/> : <XCircleIcon className="w-6 h-6"/>}
+                <span>{toastMessage}</span>
             </div>
         </div>
     );
