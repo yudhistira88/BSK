@@ -12,7 +12,6 @@ import AllServicesPage from './components/services/AllServicesPage';
 import DesignServicePage from './components/services/DesignServicePage';
 import CostSimulator from './components/CostSimulator';
 import WhyUs from './components/WhyUs';
-import Portfolio from './components/Portfolio';
 import { DataProvider } from './context/DataContext';
 import { NewsPost } from './context/DataContext';
 import DownloadProposal from './components/DownloadProposal';
@@ -35,7 +34,6 @@ const Site: React.FC<{
         <AboutUs />
         <WhoWeAre setView={setView} activeTabId={initialState?.activeServiceTab} />
         <WhyUs />
-        <Portfolio />
         <DownloadProposal />
         <FAQ />
         <TipsAndNews setSelectedPost={setSelectedPost} />

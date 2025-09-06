@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext';
 import { 
-    CogIcon, PhotographIcon, ChartBarIcon, UsersIcon, IdentificationIcon, RssIcon, MailIcon, OfficeBuildingIcon, BudgetIcon, CheckCircleIcon, ArchitectIcon, DownloadIcon, QuestionMarkCircleIcon, KeyIcon, XCircleIcon
+    CogIcon, PhotographIcon, ChartBarIcon, UsersIcon, IdentificationIcon, RssIcon, MailIcon, OfficeBuildingIcon, BudgetIcon, CheckCircleIcon, ArchitectIcon, DownloadIcon, QuestionMarkCircleIcon, KeyIcon, XCircleIcon, TrashIcon
 } from './icons';
 
 const SelectField: React.FC<{ label: string; value: string; options: string[]; onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void; }> = ({ label, value, options, onChange }) => (
@@ -894,9 +894,7 @@ const TabbedContent: React.FC<{
             {items.length > 0 && items[activeIndex] != null && (
                 <div className="relative pt-6">
                     <button onClick={handleRemove} className="absolute top-0 right-0 flex items-center gap-1 text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2 py-1 rounded-md text-sm z-10 font-semibold transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
+                        <TrashIcon className="h-4 w-4" />
                         Remove
                     </button>
                     {renderItemContent(items[activeIndex], activeIndex)}
@@ -1172,9 +1170,7 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
 
 const RemoveButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
     <button onClick={onClick} className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-50" aria-label="Remove item">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-        </svg>
+        <TrashIcon className="h-5 w-5" />
     </button>
 );
 
