@@ -381,7 +381,7 @@ const initialData: AppData = {
                 label: 'Konsultasi / Desain',
                 title: 'Dari Konsep Menjadi Cetak Biru',
                 description: 'Kami meletakkan fondasi kesuksesan proyek Anda melalui perencanaan strategis, desain inovatif, dan integrasi teknologi modern.',
-                image: 'https://images.unsplash.com/photo-1542382257-80ded14b0a39?q=80&w=2070&auto=format&fit=crop',
+                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154483/Kolsultasi_Desain_afevli.png',
                 accordions: [
                   {
                     id: 'desain-visual',
@@ -415,7 +415,7 @@ const initialData: AppData = {
                 label: 'Bangun / Renovasi',
                 title: 'Membangun Impian, Mewujudkan Visi',
                 description: 'Tim kami yang berpengalaman merealisasikan desain menjadi kenyataan dengan standar kualitas tertinggi, tepat waktu, dan sesuai anggaran.',
-                image: 'https://images.unsplash.com/photo-1579969402128-422a8a1639a6?q=80&w=1974&auto=format&fit=crop',
+                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154481/Bangun_Renovasi_dia5eq.png',
                 accordions: [
                   {
                     id: 'pembangunan-beragam',
@@ -449,7 +449,7 @@ const initialData: AppData = {
                 label: 'Repair Maintenance',
                 title: 'Menjaga Aset Properti Anda',
                 description: 'Kami menyediakan layanan perbaikan responsif dan program pemeliharaan preventif untuk menjaga properti Anda tetap dalam kondisi prima dan mencegah kerusakan.',
-                image: 'https://images.unsplash.com/photo-1610123514139-3c7216f9f045?q=80&w=1964&auto=format&fit=crop',
+                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154486/Repair_Maintenance_fgy8zd.png',
                 accordions: [
                   {
                     id: 'perbaikan-kerusakan',
@@ -493,7 +493,7 @@ const initialData: AppData = {
                 label: 'MEP / Pabrikasi',
                 title: 'Sistem Inti Bangunan Modern',
                 description: 'Memastikan setiap bangunan berfungsi optimal dengan sistem Mekanikal, Elektrikal, dan Plumbing (MEP) yang andal serta pabrikasi baja kustom.',
-                image: 'https://images.unsplash.com/photo-1555963962-9f6831d42858?q=80&w=2070&auto=format&fit=crop',
+                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154489/MEP_Pabrikasi_ucjuk6.png',
                 accordions: [
                   {
                     id: 'instalasi-listrik',
@@ -527,7 +527,7 @@ const initialData: AppData = {
                 label: 'Infrastruktur',
                 title: 'Membangun Fondasi Komunitas',
                 description: 'Kami mengerjakan proyek infrastruktur pendukung yang esensial untuk kawasan residensial maupun komersial, dengan standar rekayasa yang terjamin.',
-                image: 'https://images.unsplash.com/photo-1618044732153-65955653b675?q=80&w=2070&auto=format&fit=crop',
+                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154490/Infrastruktur_wcqy1r.png',
                 accordions: [
                   {
                     id: 'jalan-jembatan',
@@ -566,7 +566,7 @@ const initialData: AppData = {
                 label: 'Interior / Eksterior',
                 title: 'Sentuhan Akhir yang Sempurna',
                 description: 'Menciptakan ruang yang menginspirasi dan fasad yang memukau, kami menggabungkan estetika dan fungsionalitas untuk detail akhir properti Anda.',
-                image: 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?q=80&w=2070&auto=format&fit=crop',
+                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154490/Interior_Eksterior_y73w10.png',
                 accordions: [
                   {
                     id: 'desain-build-interior',
@@ -595,7 +595,7 @@ const initialData: AppData = {
                 label: 'Smart Solutions',
                 title: 'Hunian Cerdas untuk Masa Depan',
                 description: 'Mengintegrasikan teknologi cerdas untuk meningkatkan efisiensi, keamanan, dan kenyamanan properti residensial dan komersial Anda.',
-                image: 'https://images.unsplash.com/photo-1563297033-04a080843a41?q=80&w=2069&auto=format&fit=crop',
+                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154487/Smart_Solutions_ghxupt.png',
                 accordions: [
                   {
                     id: 'solar-panel',
