@@ -787,11 +787,11 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
     clients: {
         title: 'Klien Kami',
         logos: [
-            { src: 'https://i.imgur.com/gO3mH8q.png', alt: 'Klien 1' },
-            { src: 'https://i.imgur.com/gO3mH8q.png', alt: 'Klien 2' },
-            { src: 'https://i.imgur.com/gO3mH8q.png', alt: 'Klien 3' },
-            { src: 'https://i.imgur.com/gO3mH8q.png', alt: 'Klien 4' },
-            { src: 'https://i.imgur.com/gO3mH8q.png', alt: 'Klien 5' },
+            { src: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154478/image_55_taq2iy.png', alt: 'Client Logo 1' },
+            { src: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154478/image_58_kugnf0.png', alt: 'Client Logo 2' },
+            { src: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154478/image_59_uwoarn.png', alt: 'Client Logo 3' },
+            { src: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154478/image_56_m71fju.png', alt: 'Client Logo 4' },
+            { src: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154478/image_54_cqupvk.png', alt: 'Client Logo 5' },
         ]
     },
     footer: {
