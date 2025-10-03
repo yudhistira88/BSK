@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
+import { supabase } from '../lib/supabaseClient';
 
 interface RegisterProps {
     setView: (view: string) => void;
@@ -7,43 +8,45 @@ interface RegisterProps {
 
 const Register: React.FC<RegisterProps> = ({ setView }) => {
     const { data } = useData();
-    const [formData, setFormData] = useState({
-        fullName: '',
-        email: '',
-        phone: '',
-        company: '',
-        type: 'Customer',
-        password: '',
-        confirmPassword: '',
-    });
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const [message, setMessage] = useState('');
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        setSuccess('');
+        setMessage('');
 
-        if (formData.password !== formData.confirmPassword) {
+        if (password !== confirmPassword) {
             setError('Kata sandi tidak cocok.');
             return;
         }
+        
+        setLoading(true);
 
-        if (formData.password.length < 6) {
-            setError('Kata sandi minimal harus 6 karakter.');
-            return;
+        const { data: { user }, error } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+        });
+
+        if (error) {
+            setError(error.message);
+        } else if (user) {
+            if (user.identities && user.identities.length === 0) {
+                 setMessage('Pengguna dengan email ini sudah ada. Silakan coba masuk.');
+            } else {
+                 setMessage('Pendaftaran berhasil! Silakan periksa email Anda untuk tautan konfirmasi.');
+                 // Clear form
+                 setEmail('');
+                 setPassword('');
+                 setConfirmPassword('');
+            }
         }
-
-        // Simulate successful registration
-        setSuccess('Pendaftaran berhasil! Anda akan diarahkan ke halaman login.');
-        setTimeout(() => {
-            setView('login');
-        }, 2000);
+        
+        setLoading(false);
     };
 
     return (
@@ -54,45 +57,33 @@ const Register: React.FC<RegisterProps> = ({ setView }) => {
             <div className="absolute inset-0 bg-bsk-dark-gray/80 backdrop-blur-sm"></div>
             <div className="relative w-full max-w-md z-10">
                 <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-2xl shadow-lg text-white">
-                    <h2 className="text-3xl font-bold text-center mb-1">Pendaftaran Mitra BSK</h2>
-                    <p className="text-center text-gray-300 mb-6">Buat akun baru Anda.</p>
+                    <h2 className="text-3xl font-bold text-center mb-1">Pendaftaran Akun</h2>
+                    <p className="text-center text-gray-300 mb-6">Buat akun baru untuk memulai.</p>
                     
                     {error && (
                         <div className="bg-red-500/30 border border-red-500 text-red-200 px-4 py-3 rounded relative mb-4" role="alert">
                             <span>{error}</span>
                         </div>
                     )}
-                    {success && (
+                    {message && (
                         <div className="bg-green-500/30 border border-green-500 text-green-200 px-4 py-3 rounded relative mb-4" role="alert">
-                           <span>{success}</span>
+                           <span>{message}</span>
                         </div>
                     )}
                     
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <InputField name="fullName" label="Nama Lengkap" value={formData.fullName} onChange={handleChange} required />
-                        <InputField name="email" label="Alamat Email" type="email" value={formData.email} onChange={handleChange} required />
-                        <InputField name="phone" label="Nomor Telepon" type="tel" value={formData.phone} onChange={handleChange} required />
-                        <InputField name="company" label="Nama Perusahaan (Opsional)" value={formData.company} onChange={handleChange} />
-
-                        <div>
-                             <label htmlFor="type" className="block text-sm font-medium text-gray-300">Jenis Pendaftaran</label>
-                             <select id="type" name="type" value={formData.type} onChange={handleChange} className="mt-1 block w-full px-4 py-3 bg-white/10 text-white border-2 border-transparent focus:border-bsk-yellow rounded-md shadow-sm focus:outline-none focus:ring-0 sm:text-sm transition-all appearance-none">
-                                <option className="bg-bsk-dark-gray">Customer</option>
-                                <option className="bg-bsk-dark-gray">Mitra</option>
-                                <option className="bg-bsk-dark-gray">Distributor</option>
-                            </select>
-                        </div>
-                        
-                        <InputField name="password" label="Kata Sandi" type="password" value={formData.password} onChange={handleChange} required />
-                        <InputField name="confirmPassword" label="Konfirmasi Kata Sandi" type="password" value={formData.confirmPassword} onChange={handleChange} required />
+                        <InputField name="email" label="Alamat Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                        <InputField name="password" label="Kata Sandi" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                        <InputField name="confirmPassword" label="Konfirmasi Kata Sandi" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
 
                         <div>
                             <button
                                 type="submit"
-                                className="w-full flex justify-center py-3 px-4 mt-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-bsk-dark-gray bg-bsk-yellow hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-bsk-yellow transition-all tracking-wider transform hover:scale-105"
-                                disabled={!!success}
+                                className="w-full flex justify-center items-center py-3 px-4 mt-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-bsk-dark-gray bg-bsk-yellow hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-bsk-yellow transition-all tracking-wider transform hover:scale-105 disabled:opacity-75"
+                                disabled={loading}
                             >
-                                Daftar
+                                {loading && <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-bsk-dark-gray" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>}
+                                {loading ? 'Mendaftar...' : 'Daftar'}
                             </button>
                         </div>
                     </form>
