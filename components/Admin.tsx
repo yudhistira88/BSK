@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext';
 import { 
@@ -979,11 +980,16 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
     
     const applyCacheBuster = (url: string) => {
         try {
+            // Works for absolute URLs
             const newUrl = new URL(url);
             newUrl.searchParams.set('t', Date.now().toString());
             return newUrl.toString();
         } catch (e) {
-            return `${url}?t=${Date.now().toString()}`;
+            // Fallback for relative URLs or malformed URLs that the browser might still handle
+            const [path, queryString] = url.split('?');
+            const params = new URLSearchParams(queryString || '');
+            params.set('t', Date.now().toString());
+            return `${path}?${params.toString()}`;
         }
     };
 
