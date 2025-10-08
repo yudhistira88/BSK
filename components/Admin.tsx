@@ -978,19 +978,23 @@ const ImageField: React.FC<{ label: string; src: string; onUpdate: (value: strin
         }
     }, [status]);
     
-    const applyCacheBuster = (url: string) => {
-        try {
-            // Works for absolute URLs
-            const newUrl = new URL(url);
-            newUrl.searchParams.set('t', Date.now().toString());
-            return newUrl.toString();
-        } catch (e) {
-            // Fallback for relative URLs or malformed URLs that the browser might still handle
-            const [path, queryString] = url.split('?');
-            const params = new URLSearchParams(queryString || '');
-            params.set('t', Date.now().toString());
-            return `${path}?${params.toString()}`;
-        }
+    const applyCacheBuster = (url: string): string => {
+        if (!url) return '';
+        
+        // Handle potential fragments by splitting them off first
+        const [mainUrl, hash] = url.split('#');
+        const hashPart = hash ? `#${hash}` : '';
+
+        // Now handle query parameters
+        const [path, queryString] = mainUrl.split('?');
+        const params = new URLSearchParams(queryString || '');
+        
+        // Set/update the cache-busting parameter
+        params.set('t', Date.now().toString());
+        
+        const newQueryString = params.toString();
+
+        return `${path}?${newQueryString}${hashPart}`;
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
