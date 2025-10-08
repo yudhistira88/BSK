@@ -315,13 +315,13 @@ const LOCAL_STORAGE_KEY = 'bsk-admin-data';
 const initialData: AppData = {
     header: {
         logoText: 'BSK',
-        logoImage: createImageUrl('hero/logo_bsk_white.png'),
+        logoImage: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/logo_bsk_white.png',
         navLinks: [
             { text: 'Beranda', href: '#home' },
             { text: 'Tentang Kami', href: '#about-us' },
             { text: 'Layanan', href: '#layanan-unggulan' },
-            { text: 'Klien', href: '#klien' },
             { text: 'Berita', href: '#berita' },
+            { text: 'Klien', href: '#klien' },
             { text: 'Kontak', href: '#kontak' },
         ],
         ctaButtons: [
@@ -335,13 +335,13 @@ const initialData: AppData = {
                 title: ['Konstruksi & Renovasi', 'Profesional'],
                 subtitle: 'Mewujudkan properti impian Anda, dari hunian pribadi hingga bangunan komersial. Kualitas terjamin, tepat waktu, dan sesuai anggaran.',
                 buttonText: 'Lihat Layanan Kami',
-                backgroundImage: createImageUrl('hero/gennifer-miller-Mb_r0CIDFh8-unsplash.jpg'),
+                backgroundImage: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/gennifer-miller-Mb_r0CIDFh8-unsplash.jpg',
             },
             {
                 title: ['Solusi Desain, MEP', '& Interior'],
                 subtitle: 'Layanan lengkap untuk desain arsitektur, sistem MEP (Mekanikal, Elektrikal, Plumbing), serta pengerjaan interior dan eksterior yang estetis.',
                 buttonText: 'Konsultasi Gratis',
-                backgroundImage: createImageUrl('hero/spacejoy-9M66C_w_ToM-unsplash.jpg'),
+                backgroundImage: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/spacejoy-9M66C_w_ToM-unsplash.jpg',
             }
         ]
     },
@@ -390,7 +390,7 @@ const initialData: AppData = {
                 label: 'Konsultasi / Desain',
                 title: 'Dari Konsep Menjadi Cetak Biru',
                 description: 'Kami meletakkan fondasi kesuksesan proyek Anda melalui perencanaan strategis, desain inovatif, dan integrasi teknologi modern.',
-                image: createImageUrl('services/konsultasi_desain.png'),
+                image: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/istockphoto-1224506889-612x612.jpg',
                 accordions: [
                   {
                     id: 'desain-visual',
@@ -424,7 +424,7 @@ const initialData: AppData = {
                 label: 'Bangun / Renovasi',
                 title: 'Membangun Impian, Mewujudkan Visi',
                 description: 'Tim kami yang berpengalaman merealisasikan desain menjadi kenyataan dengan standar kualitas tertinggi, tepat waktu, dan sesuai anggaran.',
-                image: createImageUrl('services/bangun_renovasi.png'),
+                image: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/istockphoto-1384317531-612x612.jpg',
                 accordions: [
                   {
                     id: 'pembangunan-beragam',
@@ -458,7 +458,7 @@ const initialData: AppData = {
                 label: 'Repair Maintenance',
                 title: 'Menjaga Aset Properti Anda',
                 description: 'Kami menyediakan layanan perbaikan responsif dan program pemeliharaan preventif untuk menjaga properti Anda tetap dalam kondisi prima dan mencegah kerusakan.',
-                image: createImageUrl('services/repair_maintenance.png'),
+                image: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/istockphoto-1840366193-612x612.jpg',
                 accordions: [
                   {
                     id: 'perbaikan-kerusakan',
@@ -502,7 +502,7 @@ const initialData: AppData = {
                 label: 'MEP / Pabrikasi',
                 title: 'Sistem Inti Bangunan Modern',
                 description: 'Memastikan setiap bangunan berfungsi optimal dengan sistem Mekanikal, Elektrikal, dan Plumbing (MEP) yang andal serta pabrikasi baja kustom.',
-                image: createImageUrl('services/mep_pabrikasi.png'),
+                image: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/istockphoto-1415985151-612x612.jpg',
                 accordions: [
                   {
                     id: 'instalasi-listrik',
@@ -536,7 +536,7 @@ const initialData: AppData = {
                 label: 'Infrastruktur',
                 title: 'Membangun Fondasi Komunitas',
                 description: 'Kami mengerjakan proyek infrastruktur pendukung yang esensial untuk kawasan residensial maupun komersial, dengan standar rekayasa yang terjamin.',
-                image: createImageUrl('services/infrastruktur.png'),
+                image: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/istockphoto-532021273-612x612.jpg',
                 accordions: [
                   {
                     id: 'jalan-jembatan',
@@ -575,7 +575,7 @@ const initialData: AppData = {
                 label: 'Interior / Eksterior',
                 title: 'Sentuhan Akhir yang Sempurna',
                 description: 'Menciptakan ruang yang menginspirasi dan fasad yang memukau, kami menggabungkan estetika dan fungsionalitas untuk detail akhir properti Anda.',
-                image: createImageUrl('services/interior_eksterior.png'),
+                image: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/spacejoy-c0JoR_-2x3E-unsplash.jpg',
                 accordions: [
                   {
                     id: 'desain-build-interior',
@@ -604,7 +604,7 @@ const initialData: AppData = {
                 label: 'Smart Solutions',
                 title: 'Hunian Cerdas untuk Masa Depan',
                 description: 'Mengintegrasikan teknologi cerdas untuk meningkatkan efisiensi, keamanan, dan kenyamanan properti residensial dan komersial Anda.',
-                image: createImageUrl('services/smart_solutions.png'),
+                image: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/istockphoto-1025744818-612x612.jpg',
                 accordions: [
                   {
                     id: 'solar-panel',
@@ -647,17 +647,17 @@ const initialData: AppData = {
             {
                 title: "Kualitas Terjamin & Profesional",
                 description: "Kami menggunakan material terbaik, tenaga kerja terampil, dan manajemen proyek yang profesional untuk memastikan hasil akhir yang superior dan tahan lama.",
-                image: createImageUrl('why-us/feature-quality.jpg')
+                image: "https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/istockphoto-2157176253-612x612.webp"
             },
             {
                 title: "Transparansi Anggaran & Tepat Waktu",
                 description: "Dengan Rencana Anggaran Biaya (RAB) yang detail dan transparan, kami berkomitmen untuk menyelesaikan setiap proyek sesuai jadwal dan anggaran yang disepakati.",
-                image: createImageUrl('why-us/feature-transparency.jpg')
+                image: "https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/istockphoto-2169178413-612x612.jpg"
             },
             {
                 title: "Solusi Konstruksi Terintegrasi",
                 description: "Layanan kami mencakup semua tahapan, mulai dari konsultasi desain, konstruksi, MEP, hingga interior, memberikan Anda kemudahan solusi satu atap.",
-                image: createImageUrl('why-us/feature-integrated.jpg')
+                image: "https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/istockphoto-925101084-612x612.jpg"
             }
         ],
         businessTypesTitle: "Didukung oleh Brand dan Distributor Ternama",
@@ -796,11 +796,11 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
     clients: {
         title: 'Klien Kami',
         logos: [
-            { src: createImageUrl('client-logos/client-logo-1.png'), alt: 'Client Logo 1' },
-            { src: createImageUrl('client-logos/client-logo-2.png'), alt: 'Client Logo 2' },
-            { src: createImageUrl('client-logos/client-logo-3.png'), alt: 'Client Logo 3' },
-            { src: createImageUrl('client-logos/client-logo-4.png'), alt: 'Client Logo 4' },
-            { src: createImageUrl('client-logos/client-logo-5.png'), alt: 'Client Logo 5' },
+            { src: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/image%2054.png', alt: 'Client Logo 1' },
+            { src: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/image%2055.png', alt: 'Client Logo 2' },
+            { src: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/image%2056.png', alt: 'Client Logo 3' },
+            { src: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/image%2058.png', alt: 'Client Logo 4' },
+            { src: 'https://avaksnncsiptconloujk.supabase.co/storage/v1/object/public/bsk-assets/hero/image%2059.png', alt: 'Client Logo 5' },
         ]
     },
     footer: {
