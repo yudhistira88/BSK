@@ -1,20 +1,20 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// For client-side code, env vars might not be set in local dev without a .env file.
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// The user has provided the public Supabase credentials.
+// For this static application setup, we will use them directly.
+const supabaseUrl = 'https://avaksnncsiptconloujk.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2YWtzbm5jc2lwdGNvbmxvdWprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyNzM4NzYsImV4cCI6MjA3MTg0OTg3Nn0.Xo_8xycG6PNMGYwMPYMvlq3TuQYwnqbKC59ybHsWLJo';
 
 let supabase: SupabaseClient;
+export const isSupabaseConfigured = !!(supabaseUrl && supabaseAnonKey);
 
-if (!supabaseUrl || !supabaseAnonKey) {
-    // Fallback to placeholder values for local development to allow the UI to render.
-    // This will cause Supabase API calls to fail with an auth error, but the app won't crash.
-    // A real Supabase instance is required for functionality.
-    console.warn(
-        'Supabase environment variables not set. Using placeholder credentials. ' +
-        'API calls to Supabase will fail. For full functionality, create a .env.local file ' +
-        'and set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.'
+if (!isSupabaseConfigured) {
+    // This block should ideally not be reached now.
+    // Kept as a fallback in case the credentials are removed.
+    console.error(
+        'Supabase configuration is missing. Registration and login will not work.'
     );
+    // Create a dummy client to avoid crashes
     supabase = createClient('https://placeholder.supabase.co', 'placeholder-anon-key');
 } else {
     supabase = createClient(supabaseUrl, supabaseAnonKey);

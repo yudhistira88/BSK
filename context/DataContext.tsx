@@ -1,5 +1,14 @@
 
+
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+
+// --- Supabase Image URL Helper ---
+// This function creates a public URL for an image stored in your Supabase bucket.
+// I'm assuming your bucket is named 'bsk-assets'.
+const SUPABASE_URL = 'https://avaksnncsiptconloujk.supabase.co';
+const BUCKET_NAME = 'bsk-assets';
+const createImageUrl = (path: string) => `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${path}`;
+
 
 // Define the structure of our data for a single language
 interface NavLink {
@@ -306,7 +315,7 @@ const LOCAL_STORAGE_KEY = 'bsk-admin-data';
 const initialData: AppData = {
     header: {
         logoText: 'BSK',
-        logoImage: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1756094098/logo_bsk_white_ccbsbg.png?v=3',
+        logoImage: createImageUrl('logos/logo_bsk_white_v3.png'),
         navLinks: [
             { text: 'Beranda', href: '#home' },
             { text: 'Tentang Kami', href: '#about-us' },
@@ -326,13 +335,13 @@ const initialData: AppData = {
                 title: ['Konstruksi & Renovasi', 'Profesional'],
                 subtitle: 'Mewujudkan properti impian Anda, dari hunian pribadi hingga bangunan komersial. Kualitas terjamin, tepat waktu, dan sesuai anggaran.',
                 buttonText: 'Lihat Layanan Kami',
-                backgroundImage: 'https://images.pexels.com/photos/4246120/pexels-photo-4246120.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+                backgroundImage: createImageUrl('hero/hero-bg-1.jpeg'),
             },
             {
                 title: ['Solusi Desain, MEP', '& Interior'],
                 subtitle: 'Layanan lengkap untuk desain arsitektur, sistem MEP (Mekanikal, Elektrikal, Plumbing), serta pengerjaan interior dan eksterior yang estetis.',
                 buttonText: 'Konsultasi Gratis',
-                backgroundImage: 'https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+                backgroundImage: createImageUrl('hero/hero-bg-2.jpeg'),
             }
         ]
     },
@@ -350,8 +359,8 @@ const initialData: AppData = {
         tagline: "Build Your Imagination",
         visionTitle: "VISI",
         visionParagraph: "Menjadi perusahaan kontraktor yang profesional dan terpercaya di bidang jasa konstruksi serta penyedia alat-alat konstruksi, dengan mengedepankan standar mutu tinggi, ketepatan waktu, serta solusi yang inovatif, guna memberikan pelayanan terbaik dan bernilai tambah bagi setiap customer dalam mendukung keberhasilan proyek.",
-        visionImage1: "https://images.unsplash.com/photo-1516557070043-c04095b75432?q=80&w=2070&auto=format&fit=crop",
-        visionImage2: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop",
+        visionImage1: createImageUrl('about/vision-1.jpg'),
+        visionImage2: createImageUrl('about/vision-2.jpg'),
         missionTitle: "MISI",
         missions: [
             {
@@ -381,7 +390,7 @@ const initialData: AppData = {
                 label: 'Konsultasi / Desain',
                 title: 'Dari Konsep Menjadi Cetak Biru',
                 description: 'Kami meletakkan fondasi kesuksesan proyek Anda melalui perencanaan strategis, desain inovatif, dan integrasi teknologi modern.',
-                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154483/Kolsultasi_Desain_afevli.png',
+                image: createImageUrl('services/konsultasi_desain.png'),
                 accordions: [
                   {
                     id: 'desain-visual',
@@ -415,7 +424,7 @@ const initialData: AppData = {
                 label: 'Bangun / Renovasi',
                 title: 'Membangun Impian, Mewujudkan Visi',
                 description: 'Tim kami yang berpengalaman merealisasikan desain menjadi kenyataan dengan standar kualitas tertinggi, tepat waktu, dan sesuai anggaran.',
-                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154481/Bangun_Renovasi_dia5eq.png',
+                image: createImageUrl('services/bangun_renovasi.png'),
                 accordions: [
                   {
                     id: 'pembangunan-beragam',
@@ -449,7 +458,7 @@ const initialData: AppData = {
                 label: 'Repair Maintenance',
                 title: 'Menjaga Aset Properti Anda',
                 description: 'Kami menyediakan layanan perbaikan responsif dan program pemeliharaan preventif untuk menjaga properti Anda tetap dalam kondisi prima dan mencegah kerusakan.',
-                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154486/Repair_Maintenance_fgy8zd.png',
+                image: createImageUrl('services/repair_maintenance.png'),
                 accordions: [
                   {
                     id: 'perbaikan-kerusakan',
@@ -493,7 +502,7 @@ const initialData: AppData = {
                 label: 'MEP / Pabrikasi',
                 title: 'Sistem Inti Bangunan Modern',
                 description: 'Memastikan setiap bangunan berfungsi optimal dengan sistem Mekanikal, Elektrikal, dan Plumbing (MEP) yang andal serta pabrikasi baja kustom.',
-                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154489/MEP_Pabrikasi_ucjuk6.png',
+                image: createImageUrl('services/mep_pabrikasi.png'),
                 accordions: [
                   {
                     id: 'instalasi-listrik',
@@ -527,7 +536,7 @@ const initialData: AppData = {
                 label: 'Infrastruktur',
                 title: 'Membangun Fondasi Komunitas',
                 description: 'Kami mengerjakan proyek infrastruktur pendukung yang esensial untuk kawasan residensial maupun komersial, dengan standar rekayasa yang terjamin.',
-                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154490/Infrastruktur_wcqy1r.png',
+                image: createImageUrl('services/infrastruktur.png'),
                 accordions: [
                   {
                     id: 'jalan-jembatan',
@@ -566,7 +575,7 @@ const initialData: AppData = {
                 label: 'Interior / Eksterior',
                 title: 'Sentuhan Akhir yang Sempurna',
                 description: 'Menciptakan ruang yang menginspirasi dan fasad yang memukau, kami menggabungkan estetika dan fungsionalitas untuk detail akhir properti Anda.',
-                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154490/Interior_Eksterior_y73w10.png',
+                image: createImageUrl('services/interior_eksterior.png'),
                 accordions: [
                   {
                     id: 'desain-build-interior',
@@ -595,7 +604,7 @@ const initialData: AppData = {
                 label: 'Smart Solutions',
                 title: 'Hunian Cerdas untuk Masa Depan',
                 description: 'Mengintegrasikan teknologi cerdas untuk meningkatkan efisiensi, keamanan, dan kenyamanan properti residensial dan komersial Anda.',
-                image: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154487/Smart_Solutions_ghxupt.png',
+                image: createImageUrl('services/smart_solutions.png'),
                 accordions: [
                   {
                     id: 'solar-panel',
@@ -638,29 +647,29 @@ const initialData: AppData = {
             {
                 title: "Kualitas Terjamin & Profesional",
                 description: "Kami menggunakan material terbaik, tenaga kerja terampil, dan manajemen proyek yang profesional untuk memastikan hasil akhir yang superior dan tahan lama.",
-                image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop"
+                image: createImageUrl('why-us/feature-quality.jpg')
             },
             {
                 title: "Transparansi Anggaran & Tepat Waktu",
                 description: "Dengan Rencana Anggaran Biaya (RAB) yang detail dan transparan, kami berkomitmen untuk menyelesaikan setiap proyek sesuai jadwal dan anggaran yang disepakati.",
-                image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2130&auto=format&fit=crop"
+                image: createImageUrl('why-us/feature-transparency.jpg')
             },
             {
                 title: "Solusi Konstruksi Terintegrasi",
                 description: "Layanan kami mencakup semua tahapan, mulai dari konsultasi desain, konstruksi, MEP, hingga interior, memberikan Anda kemudahan solusi satu atap.",
-                image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=2070&auto=format&fit=crop"
+                image: createImageUrl('why-us/feature-integrated.jpg')
             }
         ],
         businessTypesTitle: "Didukung oleh Brand dan Distributor Ternama",
         businessTypes: [
-            { icon: "https://i.imgur.com/w8qXhP9.png", label: "Holcim" },
-            { icon: "https://i.imgur.com/8p5YJ0x.png", label: "TOTO" },
-            { icon: "https://i.imgur.com/zVqJT2L.png", label: "Nippon Paint" },
-            { icon: "https://i.imgur.com/sSg1g7P.png", label: "Jayamix" },
-            { icon: "https://i.imgur.com/Y3WfN07.png", label: "Schneider" },
-            { icon: "https://i.imgur.com/o2kZ56A.png", label: "Roman Granit" },
-            { icon: "https://i.imgur.com/d9jYj6v.png", label: "Semen Tiga Roda" },
-            { icon: "https://i.imgur.com/eK9i9tA.png", label: "Dulux" }
+            { icon: createImageUrl('partner-logos/holcim.png'), label: "Holcim" },
+            { icon: createImageUrl('partner-logos/toto.png'), label: "TOTO" },
+            { icon: createImageUrl('partner-logos/nippon-paint.png'), label: "Nippon Paint" },
+            { icon: createImageUrl('partner-logos/jayamix.png'), label: "Jayamix" },
+            { icon: createImageUrl('partner-logos/schneider.png'), label: "Schneider" },
+            { icon: createImageUrl('partner-logos/roman-granit.png'), label: "Roman Granit" },
+            { icon: createImageUrl('partner-logos/tiga-roda.png'), label: "Semen Tiga Roda" },
+            { icon: createImageUrl('partner-logos/dulux.png'), label: "Dulux" }
         ]
     },
     portfolio: {
@@ -668,12 +677,12 @@ const initialData: AppData = {
         paragraph: "Jelajahi berbagai proyek yang telah berhasil kami selesaikan, menunjukkan komitmen kami terhadap kualitas, inovasi, dan kepuasan klien di berbagai sektor.",
         filters: ["Semua", "Hunian", "Komersial", "Industri", "Renovasi"],
         projects: [
-            { id: 1, image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop", title: "Villa Modern di Bali", category: "Hunian" },
-            { id: 2, image: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=2069&auto=format&fit=crop", title: "Gedung Perkantoran Jakarta", category: "Komersial" },
-            { id: 3, image: "https://images.unsplash.com/photo-1570129477492-45c003edd2e7?q=80&w=2070&auto=format&fit=crop", title: "Renovasi Rumah Klasik", category: "Renovasi" },
-            { id: 4, image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1974&auto=format&fit=crop", title: "Rumah Minimalis Suburban", category: "Hunian" },
-            { id: 5, image: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?q=80&w=2070&auto=format&fit=crop", title: "Pabrik Manufaktur Cikarang", category: "Industri" },
-            { id: 6, image: "https://images.unsplash.com/photo-1556761175-b413da4b248a?q=80&w=1974&auto=format&fit=crop", title: "Ruko Multifungsi", category: "Komersial" }
+            { id: 1, image: createImageUrl('portfolio/villa-modern-bali.jpg'), title: "Villa Modern di Bali", category: "Hunian" },
+            { id: 2, image: createImageUrl('portfolio/gedung-perkantoran-jakarta.jpg'), title: "Gedung Perkantoran Jakarta", category: "Komersial" },
+            { id: 3, image: createImageUrl('portfolio/renovasi-rumah-klasik.jpg'), title: "Renovasi Rumah Klasik", category: "Renovasi" },
+            { id: 4, image: createImageUrl('portfolio/rumah-minimalis-suburban.jpg'), title: "Rumah Minimalis Suburban", category: "Hunian" },
+            { id: 5, image: createImageUrl('portfolio/pabrik-manufaktur-cikarang.jpg'), title: "Pabrik Manufaktur Cikarang", category: "Industri" },
+            { id: 6, image: createImageUrl('portfolio/ruko-multifungsi.jpg'), title: "Ruko Multifungsi", category: "Komersial" }
         ]
     },
     ctaSlider: [
@@ -681,7 +690,7 @@ const initialData: AppData = {
             type: 'download',
             title: "Download Profil Perusahaan BSK",
             paragraph: "Lihat profil perusahaan untuk mendapatkan informasi terbaru dan penawaran dari BSK Konstruksi.",
-            image: "https://i.imgur.com/g8f3A8s.png",
+            image: createImageUrl('cta/proposal-mockup.png'),
             buttonText: "Unduh Proposal",
             fileUrl: "/BSK-Company-Profile.pdf"
         },
@@ -689,7 +698,7 @@ const initialData: AppData = {
             type: 'partner',
             title: "Jadi Mitra Bisnis BSK",
             paragraph: "Bergabunglah dengan jaringan kami dan raih kesuksesan bersama. Kami membuka peluang kemitraan untuk distributor, sub-kontraktor, dan para profesional.",
-            image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2130&auto=format&fit=crop",
+            image: createImageUrl('cta/partner-banner.jpg'),
             buttonText: "Hubungi Kami",
             ctaUrl: `https://wa.me/6282246934495?text=${encodeURIComponent('Halo, saya tertarik untuk menjadi mitra bisnis BSK.')}`
         }
@@ -738,7 +747,7 @@ const initialData: AppData = {
         title: 'Wawasan & Berita',
         posts: [
             {
-                image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2070&auto=format&fit=crop',
+                image: createImageUrl('news/sustainable-construction.jpg'),
                 title: 'Konstruksi Berkelanjutan: Masa Depan Lebih Hijau',
                 date: 'MEI 15, 2024',
                 comments: 5,
@@ -747,7 +756,7 @@ Konstruksi berkelanjutan bukan lagi sekadar pilihan, melainkan sebuah keharusan.
 Salah satu pilar utama konstruksi hijau adalah efisiensi energi. Pemasangan panel surya menjadi solusi populer untuk mengurangi ketergantungan pada energi fosil. Selain itu, desain bangunan yang memaksimalkan pencahayaan alami dan ventilasi silang dapat secara signifikan menekan biaya listrik. Kami di BSK Construction memiliki keahlian dalam mengintegrasikan sistem panel surya dan desain pasif untuk menciptakan hunian yang tidak hanya nyaman tetapi juga hemat biaya operasional.`
             },
             {
-                image: 'https://images.unsplash.com/photo-1606788283756-05b63b213b86?q=80&w=2070&auto=format&fit=crop',
+                image: createImageUrl('news/smart-home.jpg'),
                 title: 'Integrasi Smart Home: Wujudkan Hunian Cerdas',
                 date: 'APRIL 28, 2024',
                 comments: 8,
@@ -756,7 +765,7 @@ Teknologi rumah pintar (smart home) telah mengubah cara kita berinteraksi dengan
 Kenyamanan bukan satu-satunya keuntungan. Sistem smart home juga berkontribusi pada efisiensi energi. Sensor gerak dapat mematikan lampu di ruangan kosong, dan termostat pintar dapat menyesuaikan suhu secara otomatis sesuai dengan kebiasaan penghuni. Di BSK Construction, kami membantu klien merancang dan mengimplementasikan solusi smart home yang disesuaikan dengan kebutuhan dan gaya hidup mereka.`
             },
             {
-                image: 'https://images.unsplash.com/photo-1628177142042-a0dc5c1753c1?q=80&w=1964&auto=format&fit=crop',
+                image: createImageUrl('news/wtp-system.jpg'),
                 title: 'Pentingnya Sistem WTP untuk Air Bersih',
                 date: 'APRIL 10, 2024',
                 comments: 3,
@@ -765,7 +774,7 @@ Akses terhadap air bersih adalah hak dasar dan komponen vital bagi kesehatan. Si
 Investasi pada sistem WTP tidak hanya melindungi kesehatan penghuni tetapi juga menjaga umur pakai peralatan rumah tangga seperti pemanas air dan mesin cuci dari kerusakan akibat air sadah atau korosif. Tim ahli kami dapat merancang dan memasang sistem WTP yang efisien dan andal untuk berbagai jenis properti, memastikan pasokan air yang aman dan berkualitas.`
             },
             {
-                image: 'https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=2127&auto=format&fit=crop',
+                image: createImageUrl('news/interior-design-trends.jpg'),
                 title: 'Tren Desain Interior 2024: Ruang Multifungsi',
                 date: 'MARET 22, 2024',
                 comments: 12,
@@ -774,7 +783,7 @@ Tren desain interior tahun 2024 berfokus pada fleksibilitas dan koneksi dengan a
 Selain itu, penggunaan material alami seperti kayu, batu, dan tanaman hias semakin diminati untuk menciptakan suasana yang tenang dan menyegarkan. Palet warna netral yang hangat dengan aksen warna alam (hijau zaitun, biru laut) juga mendominasi tren. Biarkan tim desainer interior kami membantu Anda menciptakan ruang yang tidak hanya indah tetapi juga fungsional dan sesuai dengan tren terkini.`
             },
              {
-                image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2070&auto=format&fit=crop',
+                image: createImageUrl('news/renovation-guide.jpg'),
                 title: 'Panduan Renovasi Sukses: Dari Perencanaan Hingga Hasil',
                 date: 'FEBRUARI 19, 2024',
                 comments: 7,
@@ -787,11 +796,11 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
     clients: {
         title: 'Klien Kami',
         logos: [
-            { src: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154478/image_55_taq2iy.png', alt: 'Client Logo 1' },
-            { src: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154478/image_58_kugnf0.png', alt: 'Client Logo 2' },
-            { src: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154478/image_59_uwoarn.png', alt: 'Client Logo 3' },
-            { src: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154478/image_56_m71fju.png', alt: 'Client Logo 4' },
-            { src: 'https://res.cloudinary.com/dnpilqnf7/image/upload/v1757154478/image_54_cqupvk.png', alt: 'Client Logo 5' },
+            { src: createImageUrl('client-logos/client-logo-1.png'), alt: 'Client Logo 1' },
+            { src: createImageUrl('client-logos/client-logo-2.png'), alt: 'Client Logo 2' },
+            { src: createImageUrl('client-logos/client-logo-3.png'), alt: 'Client Logo 3' },
+            { src: createImageUrl('client-logos/client-logo-4.png'), alt: 'Client Logo 4' },
+            { src: createImageUrl('client-logos/client-logo-5.png'), alt: 'Client Logo 5' },
         ]
     },
     footer: {
@@ -823,7 +832,7 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
     allServicesPage: {
         hero: {
             title: 'Layanan Konstruksi Komprehensif',
-            backgroundImage: 'https://images.unsplash.com/photo-1533088523199-905d45543336?q=80&w=2070&auto=format&fit=crop',
+            backgroundImage: createImageUrl('pages/all-services/hero.jpg'),
         },
         intro: {
             title: 'Solusi Terintegrasi untuk Setiap Kebutuhan',
@@ -834,7 +843,7 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
                 id: 'konsultasi-desain',
                 title: 'Konsultasi & Desain',
                 description: 'Setiap proyek hebat dimulai dengan rencana yang solid. Layanan konsultasi dan desain kami adalah fondasi Anda untuk sukses, menggabungkan visi kreatif dengan kelayakan teknis untuk menciptakan cetak biru yang fungsional, estetis, dan sesuai anggaran.',
-                image: 'https://images.unsplash.com/photo-1542382257-80ded14b0a39?q=80&w=2070&auto=format&fit=crop',
+                image: createImageUrl('pages/all-services/konsultasi-desain.jpg'),
                 offerings: [
                     'Desain Arsitektur & Konseptual',
                     'Desain Interior & Visualisasi 3D',
@@ -847,7 +856,7 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
                 id: 'bangun-renovasi',
                 title: 'Bangun / Renovasi',
                 description: 'Kami mengubah visi Anda menjadi struktur nyata. Dengan fokus pada kualitas, ketepatan waktu, dan manajemen anggaran yang cermat, kami menangani proyek konstruksi baru dan renovasi skala besar dengan keahlian tak tertandingi.',
-                image: 'https://images.unsplash.com/photo-1519995451813-39e21b0e56aa?q=80&w=2070&auto=format&fit=crop',
+                image: createImageUrl('pages/all-services/bangun-renovasi.jpg'),
                 offerings: [
                     'Pembangunan Rumah Tinggal & Villa',
                     'Konstruksi Gedung Komersial (Ruko, Kantor)',
@@ -860,7 +869,7 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
                 id: 'repair-maintenance',
                 title: 'Repair & Maintenance',
                 description: 'Menjaga nilai dan fungsionalitas properti Anda adalah prioritas kami. Layanan perbaikan dan pemeliharaan kami dirancang untuk mengatasi masalah secara proaktif dan efisien, memastikan aset Anda tetap dalam kondisi prima.',
-                image: 'https://images.unsplash.com/photo-1581092918056-0c9c7e52a413?q=80&w=2070&auto=format&fit=crop',
+                image: createImageUrl('pages/all-services/repair-maintenance.jpg'),
                 offerings: [
                     'Perbaikan Struktural & Sipil',
                     'Perbaikan Atap & Pencegahan Kebocoran',
@@ -873,7 +882,7 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
                 id: 'mep-pabrikasi',
                 title: 'MEP & Pabrikasi',
                 description: 'Inti dari setiap bangunan modern adalah sistem Mekanikal, Elektrikal, dan Plumbing (MEP) yang andal. Kami merancang, memasang, dan memelihara sistem MEP yang efisien, serta menyediakan layanan pabrikasi khusus untuk memenuhi kebutuhan unik proyek.',
-                image: 'https://images.unsplash.com/photo-1555963962-9f6831d42858?q=80&w=2070&auto=format&fit=crop',
+                image: createImageUrl('pages/all-services/mep-pabrikasi.jpg'),
                 offerings: [
                     'Instalasi Sistem Listrik & Panel',
                     'Sistem Tata Udara (HVAC)',
@@ -886,7 +895,7 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
                 id: 'infrastruktur',
                 title: 'Infrastruktur',
                 description: 'Membangun fondasi untuk masa depan, kami menangani proyek infrastruktur yang mendukung pertumbuhan komunitas dan bisnis. Dari pekerjaan jalan hingga sistem drainase, kami menerapkan standar rekayasa tertinggi untuk hasil yang tahan lama.',
-                image: 'https://images.unsplash.com/photo-1618044732153-65955653b675?q=80&w=2070&auto=format&fit=crop',
+                image: createImageUrl('pages/all-services/infrastruktur.jpg'),
                 offerings: [
                     'Pekerjaan Jalan & Pengaspalan',
                     'Konstruksi Saluran Drainase & Gorong-gorong',
@@ -899,7 +908,7 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
                 id: 'interior-eksterior',
                 title: 'Interior & Eksterior',
                 description: 'Estetika bertemu fungsionalitas dalam layanan desain dan pengerjaan interior dan eksterior kami. Kami menciptakan ruang yang menginspirasi dan fasad yang memukau, merefleksikan identitas unik Anda atau merek Anda.',
-                image: 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?q=80&w=2070&auto=format&fit=crop',
+                image: createImageUrl('pages/all-services/interior-eksterior.jpg'),
                 offerings: [
                     'Pengerjaan Interior (Fit-Out)',
                     'Desain & Pembuatan Furnitur Kustom',
@@ -912,7 +921,7 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
                 id: 'smart-solutions',
                 title: 'Smart Solutions',
                 description: 'Integrasikan teknologi cerdas ke dalam properti Anda untuk meningkatkan kenyamanan, keamanan, dan efisiensi. Kami menyediakan solusi otomasi dan sistem keamanan canggih untuk hunian dan bisnis modern.',
-                image: 'https://images.unsplash.com/photo-1563297033-04a080843a41?q=80&w=2069&auto=format&fit=crop',
+                image: createImageUrl('pages/all-services/smart-solutions.jpg'),
                 offerings: [
                     'Instalasi Sistem Smart Home',
                     'Otomasi Pencahayaan, Tirai, & AC',
@@ -930,13 +939,13 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
     designServicePage: {
         hero: {
             title: 'Layanan Desain Arsitektur',
-            backgroundImage: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=2070&auto=format&fit=crop',
+            backgroundImage: createImageUrl('pages/design-service/hero.jpg'),
         },
         about: {
             title: 'Dari Konsep Menjadi Kenyataan',
             paragraph1: 'Di BSK, kami percaya bahwa desain yang hebat adalah fondasi dari setiap bangunan yang luar biasa. Tim arsitek dan desainer kami berkolaborasi untuk mengubah visi Anda menjadi cetak biru yang fungsional, estetis, dan berkelanjutan.',
             paragraph2: 'Kami menggabungkan kreativitas dengan keahlian teknis untuk menciptakan ruang yang tidak hanya indah secara visual tetapi juga efisien dan sesuai dengan kebutuhan gaya hidup atau bisnis Anda. Proses kami yang terperinci memastikan setiap detail dipertimbangkan dengan cermat.',
-            image: 'https://images.unsplash.com/photo-1542382257-80ded14b0a39?q=80&w=2070&auto=format&fit=crop',
+            image: createImageUrl('pages/design-service/about.jpg'),
         },
         offerings: {
             title: 'Apa yang Kami Tawarkan',
@@ -969,7 +978,7 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
         hero: {
             title: 'Kalkulator Proyek Impian Anda',
             subtitle: 'Dapatkan estimasi biaya instan untuk proyek konstruksi dan renovasi Anda hanya dalam beberapa langkah.',
-            backgroundImage: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop',
+            backgroundImage: createImageUrl('pages/cost-simulator/hero.jpg'),
         },
         intro: {
             title: 'Rencanakan Anggaran Anda',
@@ -1110,7 +1119,7 @@ Langkah selanjutnya adalah memilih kontraktor yang tepat. Pastikan Anda bekerja 
         ]
     },
     loginPage: {
-        backgroundImage: 'https://images.unsplash.com/photo-1522075782449-e8782522075b?q=80&w=2070&auto=format&fit=crop',
+        backgroundImage: createImageUrl('pages/login/bg.jpg'),
         title: 'Selamat Datang Kembali',
         subtitle: 'Silakan masuk untuk mengakses akun Anda.',
         buttonText: 'Masuk'

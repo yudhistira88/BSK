@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import WhoWeAre from './components/WhoWeAre';
@@ -20,6 +21,8 @@ import WhatsAppButton from './components/WhatsAppButton';
 import AboutUs from './components/AboutUs';
 import Login from './components/Login';
 import Register from './components/Register';
+import RegistrationSuccess from './components/RegistrationSuccess';
+import { supabase } from './lib/supabaseClient';
 
 const Site: React.FC<{ 
   setView: (view: string, options?: { anchor?: string; state?: any; }) => void;
@@ -50,6 +53,7 @@ const App: React.FC = () => {
   const [costSimulatorInitialState, setCostSimulatorInitialState] = useState<any>(null);
   const [selectedPost, setSelectedPost] = useState<NewsPost | null>(null);
   const [siteInitialState, setSiteInitialState] = useState<any>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleSetView = (newView: string, options?: { anchor?: string; state?: any; }) => {
     if (newView === 'costSimulator') {
@@ -80,6 +84,10 @@ const App: React.FC = () => {
     setSelectedPost(post);
     handleSetView('postDetail');
   };
+
+  const handleRegistrationSuccess = () => {
+    setShowSuccessModal(true);
+  };
   
   const renderView = () => {
     switch(view) {
@@ -88,7 +96,7 @@ const App: React.FC = () => {
       case 'login':
         return <Login setView={handleSetView} />;
       case 'register':
-        return <Register setView={handleSetView} />;
+        return <Register setView={handleSetView} onRegistrationSuccess={handleRegistrationSuccess} />;
       case 'postDetail':
         return <PostDetail post={selectedPost!} setSelectedPost={setSelectedPost} setView={handleSetView} />;
       case 'allServices':
@@ -107,6 +115,14 @@ const App: React.FC = () => {
     <DataProvider>
       {renderView()}
       <WhatsAppButton />
+      {showSuccessModal && (
+        <RegistrationSuccess
+          onClose={() => {
+            setShowSuccessModal(false);
+            handleSetView('site');
+          }}
+        />
+      )}
     </DataProvider>
   );
 };

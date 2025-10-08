@@ -1,24 +1,28 @@
 import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 
 interface RegisterProps {
     setView: (view: string) => void;
+    onRegistrationSuccess: () => void;
 }
 
-const Register: React.FC<RegisterProps> = ({ setView }) => {
+const Register: React.FC<RegisterProps> = ({ setView, onRegistrationSuccess }) => {
     const { data } = useData();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [message, setMessage] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        setMessage('');
+
+        if (!isSupabaseConfigured) {
+            setError('Fitur pendaftaran saat ini tidak aktif. Harap hubungi administrator situs.');
+            return;
+        }
 
         if (password !== confirmPassword) {
             setError('Kata sandi tidak cocok.');
@@ -27,23 +31,19 @@ const Register: React.FC<RegisterProps> = ({ setView }) => {
         
         setLoading(true);
 
-        const { data: { user }, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
             email: email,
             password: password,
         });
 
         if (error) {
-            setError(error.message);
-        } else if (user) {
-            if (user.identities && user.identities.length === 0) {
-                 setMessage('Pengguna dengan email ini sudah ada. Silakan coba masuk.');
+            if (error.message.includes("User already registered")) {
+                setError("Pengguna dengan email ini sudah terdaftar. Silakan coba masuk.");
             } else {
-                 setMessage('Pendaftaran berhasil! Silakan periksa email Anda untuk tautan konfirmasi.');
-                 // Clear form
-                 setEmail('');
-                 setPassword('');
-                 setConfirmPassword('');
+                setError(error.message);
             }
+        } else {
+            onRegistrationSuccess();
         }
         
         setLoading(false);
@@ -63,11 +63,6 @@ const Register: React.FC<RegisterProps> = ({ setView }) => {
                     {error && (
                         <div className="bg-red-500/30 border border-red-500 text-red-200 px-4 py-3 rounded relative mb-4" role="alert">
                             <span>{error}</span>
-                        </div>
-                    )}
-                    {message && (
-                        <div className="bg-green-500/30 border border-green-500 text-green-200 px-4 py-3 rounded relative mb-4" role="alert">
-                           <span>{message}</span>
                         </div>
                     )}
                     
