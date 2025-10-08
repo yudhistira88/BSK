@@ -315,7 +315,7 @@ const LOCAL_STORAGE_KEY = 'bsk-admin-data';
 const initialData: AppData = {
     header: {
         logoText: 'BSK',
-        logoImage: createImageUrl('logos/logo_bsk_white_v3.png'),
+        logoImage: createImageUrl('hero/logo_bsk_white.png'),
         navLinks: [
             { text: 'Beranda', href: '#home' },
             { text: 'Tentang Kami', href: '#about-us' },
@@ -335,13 +335,13 @@ const initialData: AppData = {
                 title: ['Konstruksi & Renovasi', 'Profesional'],
                 subtitle: 'Mewujudkan properti impian Anda, dari hunian pribadi hingga bangunan komersial. Kualitas terjamin, tepat waktu, dan sesuai anggaran.',
                 buttonText: 'Lihat Layanan Kami',
-                backgroundImage: createImageUrl('hero/hero-bg-1.jpeg'),
+                backgroundImage: createImageUrl('hero/gennifer-miller-Mb_r0CIDFh8-unsplash.jpg'),
             },
             {
                 title: ['Solusi Desain, MEP', '& Interior'],
                 subtitle: 'Layanan lengkap untuk desain arsitektur, sistem MEP (Mekanikal, Elektrikal, Plumbing), serta pengerjaan interior dan eksterior yang estetis.',
                 buttonText: 'Konsultasi Gratis',
-                backgroundImage: createImageUrl('hero/hero-bg-2.jpeg'),
+                backgroundImage: createImageUrl('hero/spacejoy-9M66C_w_ToM-unsplash.jpg'),
             }
         ]
     },
